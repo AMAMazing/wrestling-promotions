@@ -1,8 +1,9 @@
 /**
  * Timeline, Scrubber, Geo Distribution, Leaderboard & Playback Engine
+ * Defaults to the modern 2026 era for instant newcomer clarity.
  */
 window.TimelineModule = (function() {
-  let currentYear = 1980;
+  let currentYear = 2026;
   let isPlaying = false;
   let playInterval = null;
 
@@ -10,7 +11,7 @@ window.TimelineModule = (function() {
 
   function getClosestYearData(year) {
     if (window.TIMELINE_DATA[year]) return { data: window.TIMELINE_DATA[year], year: year };
-    let closest = YEAR_KEYS[0];
+    let closest = YEAR_KEYS[YEAR_KEYS.length - 1];
     let minDiff = Math.abs(year - closest);
     for (let y of YEAR_KEYS) {
       let diff = Math.abs(year - y);
@@ -91,12 +92,12 @@ window.TimelineModule = (function() {
         const scorePct = item.score;
 
         const row = document.createElement('div');
-        row.className = 'glass-card p-3 sm:p-3.5 rounded-xl transition duration-150 group hover:border-zinc-700/80';
+        row.className = 'surface-subtle p-3 rounded-xl transition duration-150 group hover:border-zinc-700/80';
         row.innerHTML = `
-          <div class="flex items-center justify-between gap-2 mb-2 text-xs">
+          <div class="flex items-center justify-between gap-2 mb-1.5 text-xs">
             <div class="flex items-center gap-2.5 truncate">
-              <span class="w-6 h-6 rounded-lg flex items-center justify-center font-mono font-bold text-xs ${
-                index === 0 ? 'bg-amber-400 text-black shadow-sm shadow-amber-400/30' : 'bg-zinc-800 text-zinc-300'
+              <span class="w-5 h-5 rounded flex items-center justify-center font-mono font-bold text-[11px] ${
+                index === 0 ? 'bg-amber-400 text-black' : 'bg-zinc-800 text-zinc-400'
               }">
                 #${index + 1}
               </span>
@@ -104,21 +105,21 @@ window.TimelineModule = (function() {
               <span class="font-bold text-white text-sm tracking-tight" style="color: ${promo.color}">
                 ${promo.name}
               </span>
-              <span class="text-[11px] text-zinc-400 truncate hidden sm:inline">• ${item.star}</span>
+              <span class="text-[11px] text-zinc-400 truncate hidden sm:inline">• Top Star: ${item.star}</span>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
-              <span class="text-[11px] text-zinc-400 font-mono hidden md:inline truncate max-w-[140px]">${item.tv}</span>
-              <span class="font-mono font-black text-amber-400 text-sm bg-zinc-900/80 px-2 py-0.5 rounded-md border border-zinc-800">
+              <span class="text-[11px] text-zinc-400 font-mono hidden md:inline truncate max-w-[150px]">${item.tv}</span>
+              <span class="font-mono font-bold text-amber-400 text-sm bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800">
                 ${item.score}<span class="text-[10px] text-zinc-500 font-normal">/100</span>
               </span>
             </div>
           </div>
-          <div class="w-full bg-zinc-800/80 h-2 rounded-full overflow-hidden flex">
+          <div class="w-full bg-zinc-800/80 h-1.5 rounded-full overflow-hidden flex">
             <div class="h-full rounded-full transition-all duration-300" style="width: ${scorePct}%; background-color: ${promo.color};"></div>
           </div>
-          <div class="flex justify-between text-[10px] text-zinc-400 mt-1.5 font-mono">
-            <span>Scale: $${item.rev}M Gross</span>
-            <span>Gate: ${Number(item.att).toLocaleString()} fans</span>
+          <div class="flex justify-between text-[10px] text-zinc-400 mt-1 font-mono">
+            <span>Est. Scale: $${item.rev}M Gross</span>
+            <span>Peak Gate: ${Number(item.att).toLocaleString()} fans</span>
           </div>
         `;
         lbContainer.appendChild(row);
@@ -208,7 +209,7 @@ window.TimelineModule = (function() {
     togglePlay,
     init: function() {
       initListeners();
-      renderYear(1980);
+      renderYear(2026);
     }
   };
 })();

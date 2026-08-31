@@ -1,5 +1,6 @@
 /**
  * Head-to-Head Historical Matchup Simulator & Radar Matrix
+ * Defaults to WWE vs AEW in 2026 for high relevance.
  */
 window.VersusModule = (function() {
   let radarChartInstance = null;
@@ -23,12 +24,12 @@ window.VersusModule = (function() {
     });
 
     selectA.value = 'wwe';
-    selectB.value = 'wcw';
+    selectB.value = 'aew';
 
-    window.TimelineModule.YEAR_KEYS.forEach(yr => {
+    window.TimelineModule.YEAR_KEYS.slice().reverse().forEach(yr => {
       yearSelect.add(new Option(`Year: ${yr}`, yr));
     });
-    yearSelect.value = 1998;
+    yearSelect.value = 2026;
 
     selectA.addEventListener('change', updateComparison);
     selectB.addEventListener('change', updateComparison);
@@ -46,18 +47,18 @@ window.VersusModule = (function() {
         labels: ['Financial Scale', 'Live Gate Power', 'TV/Stream Reach', 'Cultural Impact', 'Roster Depth'],
         datasets: [
           {
-            label: 'WWF / WWE',
-            data: [90, 85, 95, 95, 90],
+            label: 'WWE',
+            data: [100, 95, 100, 100, 95],
             borderColor: '#EF4444',
             backgroundColor: '#EF444425',
             borderWidth: 2,
             pointRadius: 3
           },
           {
-            label: 'WCW',
-            data: [88, 92, 90, 90, 88],
-            borderColor: '#3B82F6',
-            backgroundColor: '#3B82F625',
+            label: 'AEW',
+            data: [85, 88, 85, 88, 90],
+            borderColor: '#F59E0B',
+            backgroundColor: '#F59E0B25',
             borderWidth: 2,
             pointRadius: 3
           }
