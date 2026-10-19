@@ -5,21 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Global Wrestling Index (1980–2026) | Historical Analytics</title>
   
+  <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  
-  <!-- Custom Modern Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css">
 
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
           colors: {
             brand: {
               gold: '#F59E0B',
@@ -37,62 +44,240 @@
               nwa: '#84CC16'
             },
             dark: {
-              950: '#0c0d12',
-              900: '#13141b',
-              850: '#181924',
-              800: '#222330'
+              950: '#06070a',
+              900: '#0c0e14',
+              850: '#12151f',
+              800: '#1a1e2d'
             }
           }
         }
       }
     }
   </script>
-</head>
-<body class="bg-dark-950 text-zinc-100 min-h-screen flex flex-col selection:bg-amber-400 selection:text-black">
 
-  <!-- Top Clean Navigation Bar -->
-  <header class="sticky top-0 z-50 bg-dark-900/90 backdrop-blur-md border-b border-zinc-800/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      background-color: #06070a;
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -15%, rgba(245, 158, 11, 0.14), transparent 70%),
+        radial-gradient(ellipse 50% 40% at 90% 20%, rgba(239, 68, 68, 0.06), transparent 60%),
+        radial-gradient(ellipse 50% 40% at 10% 80%, rgba(59, 130, 246, 0.06), transparent 60%),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+      background-attachment: fixed;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Premium Broadcast Surface Cards */
+    .surface-card {
+      position: relative;
+      background: linear-gradient(165deg, rgba(22, 25, 36, 0.88) 0%, rgba(12, 14, 20, 0.94) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.125rem;
+      box-shadow: 
+        0 20px 40px -15px rgba(0, 0, 0, 0.75),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .surface-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 1.5rem;
+      right: 1.5rem;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+      pointer-events: none;
+    }
+
+    .surface-card:hover {
+      border-color: rgba(255, 255, 255, 0.13);
+    }
+
+    /* Sleek Stat Pods */
+    .stat-pod {
+      background: linear-gradient(180deg, rgba(24, 27, 38, 0.75) 0%, rgba(14, 16, 23, 0.9) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+      transition: all 0.2s ease;
+    }
+
+    .stat-pod:hover {
+      border-color: rgba(245, 158, 11, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* Custom Range Scrubber */
+    input[type="range"]#timeline-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.35), rgba(63, 63, 70, 0.7));
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      outline: none;
+    }
+
+    input[type="range"]#timeline-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #F59E0B;
+      border: 3px solid #090a0f;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.5), 0 0 15px rgba(245, 158, 11, 0.85);
+      cursor: grab;
+      transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input[type="range"]#timeline-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      background: #fbbf24;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.6), 0 0 22px rgba(245, 158, 11, 1);
+    }
+
+    input[type="range"]#timeline-slider::-webkit-slider-thumb:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+    }
+
+    input[type="range"]#timeline-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #F59E0B;
+      border: 3px solid #090a0f;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.5), 0 0 15px rgba(245, 158, 11, 0.85);
+      cursor: grab;
+      transition: transform 0.15s ease;
+    }
+
+    /* Custom Select & Inputs */
+    select, input[type="text"] {
+      background-color: rgba(15, 17, 26, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) inset;
+      transition: all 0.2s ease;
+    }
+
+    select:hover, input[type="text"]:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: #F59E0B !important;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15) !important;
+      outline: none;
+    }
+
+    /* Quick Jump Year Pill Hover */
+    .year-chip {
+      background: rgba(24, 27, 38, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .year-chip:hover {
+      background: rgba(245, 158, 11, 0.14);
+      border-color: rgba(245, 158, 11, 0.45);
+      color: #fcd34d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.12);
+    }
+
+    /* Hide Scrollbars for Mobile Nav */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Custom Webkit Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #06070a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222638;
+      border-radius: 9999px;
+      border: 2px solid #06070a;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #363c56;
+    }
+
+    /* Glow Text Effect for Current Year */
+    .year-glow {
+      text-shadow: 0 0 30px rgba(245, 158, 11, 0.35);
+    }
+  </style>
+</head>
+<body class="text-zinc-100 min-h-screen flex flex-col selection:bg-amber-400 selection:text-black antialiased">
+
+  <!-- Top Broadcast Navigation Bar -->
+  <header class="sticky top-0 z-50 bg-dark-950/80 backdrop-blur-xl border-b border-white/[0.08] shadow-2xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
       
       <!-- Brand & Static Description -->
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('timeline')">
-        <div class="w-9 h-9 rounded-xl bg-amber-400 flex items-center justify-center text-black font-black text-lg shadow-sm">
+      <div class="flex items-center space-x-3.5 cursor-pointer group" onclick="switchTab('timeline')">
+        <div class="relative w-10 h-10 rounded-xl bg-gradient-to-br from-amber-300 via-amber-400 to-amber-600 flex items-center justify-center text-black font-black text-lg shadow-[0_0_20px_rgba(245,158,11,0.35)] ring-1 ring-amber-200/50 group-hover:scale-105 transition-transform duration-200">
           🥊
+          <span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-dark-950"></span>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="text-sm font-extrabold tracking-tight text-white">WRESTLING INDEX</span>
-            <span class="text-[10px] bg-zinc-800 text-amber-400 font-mono px-2 py-0.5 rounded border border-zinc-700 font-bold">1980–2026</span>
+            <span class="font-display text-sm sm:text-base font-extrabold tracking-tight text-white group-hover:text-amber-400 transition-colors">WRESTLING INDEX</span>
+            <span class="text-[10px] bg-amber-400/10 text-amber-400 font-mono px-2 py-0.5 rounded-md border border-amber-400/25 font-bold tracking-wider shadow-inner">1980–2026</span>
           </div>
-          <p class="text-[11px] text-zinc-400 hidden sm:block">Global Historical Analytics & Power Rankings</p>
+          <p class="text-[11px] text-zinc-400 hidden sm:block font-medium">Global Historical Analytics &amp; Power Rankings</p>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
-      <nav class="hidden md:flex items-center space-x-1 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800">
-        <button onclick="switchTab('timeline')" id="nav-timeline" class="tab-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-amber-400 text-black shadow-sm transition">
-          <i data-lucide="history" class="w-3.5 h-3.5 inline mr-1"></i> Timeline
+      <nav class="hidden md:flex items-center space-x-1 bg-dark-900/95 p-1.5 rounded-xl border border-white/[0.07] shadow-inner">
+        <button onclick="switchTab('timeline')" id="nav-timeline" class="tab-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-amber-400 text-black shadow-sm transition-all duration-200 flex items-center gap-1.5">
+          <i data-lucide="history" class="w-3.5 h-3.5 inline"></i> Timeline
         </button>
-        <button onclick="switchTab('analytics')" id="nav-analytics" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition">
-          <i data-lucide="trending-up" class="w-3.5 h-3.5 inline mr-1"></i> Analytics
+        <button onclick="switchTab('analytics')" id="nav-analytics" class="tab-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all duration-200 flex items-center gap-1.5">
+          <i data-lucide="trending-up" class="w-3.5 h-3.5 inline"></i> Analytics
         </button>
-        <button onclick="switchTab('versus')" id="nav-versus" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition">
-          <i data-lucide="swords" class="w-3.5 h-3.5 inline mr-1"></i> H2H Simulator
+        <button onclick="switchTab('versus')" id="nav-versus" class="tab-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all duration-200 flex items-center gap-1.5">
+          <i data-lucide="swords" class="w-3.5 h-3.5 inline"></i> H2H Simulator
         </button>
-        <button onclick="switchTab('promotions')" id="nav-promotions" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition">
-          <i data-lucide="layout-grid" class="w-3.5 h-3.5 inline mr-1"></i> Encyclopedia
+        <button onclick="switchTab('promotions')" id="nav-promotions" class="tab-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all duration-200 flex items-center gap-1.5">
+          <i data-lucide="layout-grid" class="w-3.5 h-3.5 inline"></i> Encyclopedia
         </button>
-        <button onclick="switchTab('wars')" id="nav-wars" class="tab-btn px-3 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition">
-          <i data-lucide="flame" class="w-3.5 h-3.5 inline mr-1"></i> The Wars
+        <button onclick="switchTab('wars')" id="nav-wars" class="tab-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/80 transition-all duration-200 flex items-center gap-1.5">
+          <i data-lucide="flame" class="w-3.5 h-3.5 inline"></i> The Wars
         </button>
       </nav>
 
       <!-- Quick Metrics Badges -->
       <div class="hidden lg:flex items-center gap-2 text-xs font-mono">
-        <span class="px-2.5 py-1 bg-zinc-900 rounded-lg border border-zinc-800 text-zinc-400">
+        <span class="px-2.5 py-1 bg-dark-900/90 rounded-lg border border-white/[0.07] text-zinc-400 flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <strong class="text-zinc-200">14 Major Promotions</strong>
         </span>
-        <span class="px-2.5 py-1 bg-zinc-900 rounded-lg border border-zinc-800 text-amber-400">
+        <span class="px-2.5 py-1 bg-amber-400/10 rounded-lg border border-amber-400/20 text-amber-400">
           <strong>46 Continuous Yrs</strong>
         </span>
       </div>
@@ -100,62 +285,70 @@
     </div>
 
     <!-- Mobile Navigation Bar -->
-    <div class="md:hidden flex overflow-x-auto px-3 py-2 bg-dark-900 border-t border-zinc-800/80 gap-1.5 text-xs no-scrollbar">
-      <button onclick="switchTab('timeline')" id="mob-timeline" class="flex-shrink-0 px-3 py-1.5 rounded-lg bg-amber-400 text-black font-bold">Timeline</button>
-      <button onclick="switchTab('analytics')" id="mob-analytics" class="flex-shrink-0 px-3 py-1.5 rounded-lg text-zinc-400 bg-zinc-900">Analytics</button>
-      <button onclick="switchTab('versus')" id="mob-versus" class="flex-shrink-0 px-3 py-1.5 rounded-lg text-zinc-400 bg-zinc-900">H2H Simulator</button>
-      <button onclick="switchTab('promotions')" id="mob-promotions" class="flex-shrink-0 px-3 py-1.5 rounded-lg text-zinc-400 bg-zinc-900">Encyclopedia</button>
-      <button onclick="switchTab('wars')" id="mob-wars" class="flex-shrink-0 px-3 py-1.5 rounded-lg text-zinc-400 bg-zinc-900">The Wars</button>
+    <div class="md:hidden flex overflow-x-auto px-3 py-2.5 bg-dark-900/95 border-t border-white/[0.06] gap-1.5 text-xs no-scrollbar">
+      <button onclick="switchTab('timeline')" id="mob-timeline" class="flex-shrink-0 px-3.5 py-1.5 rounded-lg bg-amber-400 text-black font-bold shadow-sm transition">Timeline</button>
+      <button onclick="switchTab('analytics')" id="mob-analytics" class="flex-shrink-0 px-3.5 py-1.5 rounded-lg text-zinc-400 bg-zinc-900 border border-white/5 transition">Analytics</button>
+      <button onclick="switchTab('versus')" id="mob-versus" class="flex-shrink-0 px-3.5 py-1.5 rounded-lg text-zinc-400 bg-zinc-900 border border-white/5 transition">H2H Simulator</button>
+      <button onclick="switchTab('promotions')" id="mob-promotions" class="flex-shrink-0 px-3.5 py-1.5 rounded-lg text-zinc-400 bg-zinc-900 border border-white/5 transition">Encyclopedia</button>
+      <button onclick="switchTab('wars')" id="mob-wars" class="flex-shrink-0 px-3.5 py-1.5 rounded-lg text-zinc-400 bg-zinc-900 border border-white/5 transition">The Wars</button>
     </div>
   </header>
 
   <!-- Main View Container -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
 
     <!-- ========================================== -->
     <!-- SECTION 1: TIMELINE & HISTORICAL SCRUBBER  -->
     <!-- ========================================== -->
     <section id="view-timeline" class="space-y-6">
       
-      <!-- Minimalist Era Hero & Playback Controls -->
-      <div class="surface-card p-5 sm:p-6 border border-zinc-800">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+      <!-- Era Hero & Playback Command Deck -->
+      <div class="surface-card p-5 sm:p-7 overflow-hidden">
+        <!-- Subtle Ambient Glow Behind Hero -->
+        <div class="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-amber-500/10 blur-3xl"></div>
+
+        <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           
-          <div class="space-y-1.5">
-            <div class="flex items-center gap-2">
-              <span id="era-badge" class="px-2.5 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30">
+          <div class="space-y-2.5 flex-1">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <span id="era-badge" class="px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-sm">
                 The Live Global Streaming Era
               </span>
-              <span class="text-xs text-zinc-400 font-mono" id="era-years-span">2025 – 2026+</span>
+              <span class="text-xs text-zinc-400 font-mono bg-white/[0.04] px-2.5 py-0.5 rounded-md border border-white/[0.06]" id="era-years-span">2025 – 2026+</span>
             </div>
 
-            <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight flex items-baseline gap-2">
-              Year <span id="current-year-display" class="text-amber-400 font-mono text-3xl sm:text-4xl">2026</span>
-            </h2>
+            <div class="flex items-baseline gap-3 pt-0.5">
+              <span class="text-xs uppercase font-mono tracking-widest text-zinc-500 font-bold">SEASON</span>
+              <h2 class="font-display text-3xl sm:text-5xl font-black text-white tracking-tight flex items-baseline gap-2.5">
+                <span id="current-year-display" class="text-amber-400 font-mono year-glow">2026</span>
+              </h2>
+            </div>
 
-            <p id="era-desc-display" class="text-xs sm:text-sm text-zinc-300 max-w-3xl leading-relaxed">
+            <p id="era-desc-display" class="text-xs sm:text-sm text-zinc-300 max-w-3xl leading-relaxed font-normal">
               WWE RAW airs live worldwide on Netflix ($5B 10-year deal); AEW expands with Warner Bros Discovery Max live streaming; international stadium cross-over alliances peak.
             </p>
           </div>
 
-          <!-- Playback Toolbar -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-            <div class="flex items-center justify-center gap-1.5">
-              <button id="btn-prev-year" class="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition" title="Previous Year">
+          <!-- Playback Command Deck -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 bg-dark-950/90 p-4 rounded-2xl border border-white/[0.08] shadow-xl">
+            <div class="flex items-center justify-center gap-2">
+              <button id="btn-prev-year" class="p-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/[0.07] transition active:scale-95" title="Previous Year">
                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
               </button>
-              <button id="btn-play" class="px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs flex items-center gap-1.5 transition shadow-sm">
-                <i data-lucide="play" id="play-icon" class="w-3.5 h-3.5 fill-current"></i> <span id="play-text">Play</span>
+              <button id="btn-play" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-extrabold text-xs flex items-center gap-2 transition shadow-[0_0_20px_rgba(245,158,11,0.3)] active:scale-95">
+                <i data-lucide="play" id="play-icon" class="w-3.5 h-3.5 fill-current"></i> <span id="play-text" class="tracking-wide uppercase">Play</span>
               </button>
-              <button id="btn-next-year" class="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition" title="Next Year">
+              <button id="btn-next-year" class="p-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-white/[0.07] transition active:scale-95" title="Next Year">
                 <i data-lucide="chevron-right" class="w-4 h-4"></i>
               </button>
             </div>
             
-            <div class="flex flex-col justify-center px-1">
-              <div class="flex justify-between text-[10px] text-zinc-400 font-mono mb-1">
+            <div class="hidden sm:block w-px h-10 bg-white/[0.08]"></div>
+
+            <div class="flex flex-col justify-center px-1 min-w-[220px] sm:min-w-[240px]">
+              <div class="flex justify-between text-[10px] text-zinc-400 font-mono mb-2 font-semibold">
                 <span>1980</span>
-                <span>1998 (MNW)</span>
+                <span class="text-amber-400/90">1998 (MNW)</span>
                 <span>2026</span>
               </div>
               <input 
@@ -165,24 +358,26 @@
                 max="2026" 
                 value="2026" 
                 step="1" 
-                class="w-full sm:w-56 h-2 bg-zinc-700 rounded-lg cursor-pointer"
+                class="w-full cursor-pointer"
               >
             </div>
           </div>
 
         </div>
 
-        <!-- Quick-Jump Chips -->
-        <div class="mt-4 pt-4 border-t border-zinc-800/80 flex flex-wrap gap-1.5 items-center">
-          <span class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider mr-1">Key Years:</span>
-          <button onclick="setYear(1983)" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition">1983: Starrcade '83</button>
-          <button onclick="setYear(1987)" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition">1987: WrestleMania III</button>
-          <button onclick="setYear(1993)" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition">1993: TripleMania & Tokyo Dome</button>
-          <button onclick="setYear(1998)" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition">1998: Monday Night Wars</button>
-          <button onclick="setYear(2005)" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition">2005: Ruthless Aggr. & NOAH</button>
-          <button onclick="setYear(2014)" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition">2014: WWE Network & NJPW</button>
-          <button onclick="setYear(2023)" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition">2023: Wembley 81k & TKO</button>
-          <button onclick="setYear(2026)" class="px-2.5 py-1 text-xs rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700/60 transition">2026: Live Netflix Era</button>
+        <!-- Quick-Jump Historical Bookmark Chips -->
+        <div class="mt-6 pt-4 border-t border-white/[0.07] flex flex-wrap gap-2 items-center">
+          <span class="text-[11px] text-zinc-400 font-bold uppercase tracking-wider mr-1 flex items-center gap-1">
+            <i data-lucide="compass" class="w-3.5 h-3.5 text-amber-400"></i> Key Eras:
+          </span>
+          <button onclick="setYear(1983)" class="year-chip px-3 py-1 text-xs rounded-lg text-zinc-300 font-medium">1983: Starrcade '83</button>
+          <button onclick="setYear(1987)" class="year-chip px-3 py-1 text-xs rounded-lg text-zinc-300 font-medium">1987: WrestleMania III</button>
+          <button onclick="setYear(1993)" class="year-chip px-3 py-1 text-xs rounded-lg text-zinc-300 font-medium">1993: TripleMania &amp; Dome</button>
+          <button onclick="setYear(1998)" class="year-chip px-3 py-1 text-xs rounded-lg text-zinc-300 font-medium">1998: Monday Night Wars</button>
+          <button onclick="setYear(2005)" class="year-chip px-3 py-1 text-xs rounded-lg text-zinc-300 font-medium">2005: Ruthless Aggr. &amp; NOAH</button>
+          <button onclick="setYear(2014)" class="year-chip px-3 py-1 text-xs rounded-lg text-zinc-300 font-medium">2014: WWE Network &amp; NJPW</button>
+          <button onclick="setYear(2023)" class="year-chip px-3 py-1 text-xs rounded-lg text-zinc-300 font-medium">2023: Wembley 81k &amp; TKO</button>
+          <button onclick="setYear(2026)" class="year-chip px-3 py-1 text-xs rounded-lg text-zinc-300 font-medium">2026: Live Netflix Era</button>
         </div>
       </div>
 
@@ -190,106 +385,115 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         <!-- Left: Power Rankings Leaderboard (7 Cols) -->
-        <div class="lg:col-span-7 surface-card p-5 space-y-4">
-          <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
-            <div>
-              <h3 class="font-extrabold text-white text-base flex items-center gap-2">
-                <i data-lucide="bar-chart-2" class="w-4 h-4 text-amber-400"></i>
-                Global Power Index Leaderboard
-              </h3>
-              <p class="text-xs text-zinc-400">Composite score (Revenue, Peak Gate, TV Reach & Roster Depth)</p>
+        <div class="lg:col-span-7 surface-card p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-white/[0.08] pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-400">
+                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h3 class="font-display font-bold text-white text-base sm:text-lg">
+                  Global Power Index Leaderboard
+                </h3>
+                <p class="text-xs text-zinc-400">Composite score (Revenue, Peak Gate, TV Reach &amp; Roster Depth)</p>
+              </div>
             </div>
-            <span id="leaderboard-year-badge" class="px-2.5 py-0.5 bg-amber-400/10 text-amber-400 border border-amber-400/30 text-xs font-mono rounded font-bold">2026</span>
+            <span id="leaderboard-year-badge" class="px-3 py-1 bg-amber-400/15 text-amber-400 border border-amber-400/30 text-xs font-mono rounded-lg font-extrabold shadow-sm">2026</span>
           </div>
 
           <!-- Dynamic Leaderboard Items -->
-          <div id="leaderboard-container" class="space-y-2.5">
+          <div id="leaderboard-container" class="space-y-2.5 pt-1">
             <!-- Injected by JavaScript -->
           </div>
         </div>
 
         <!-- Right: Year Snapshot Insights & Key Events (5 Cols) -->
-        <div class="lg:col-span-5 space-y-5">
+        <div class="lg:col-span-5 space-y-6">
           
           <!-- Key Metrics Quad Card -->
-          <div class="surface-card p-5 space-y-4">
-            <h3 class="font-bold text-white text-xs uppercase tracking-wider text-zinc-400 flex items-center gap-2">
-              <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
-              <span id="snapshot-year-title">2026</span> World Snapshot
-            </h3>
+          <div class="surface-card p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-white/[0.08] pb-3">
+              <h3 class="font-display font-bold text-xs uppercase tracking-wider text-zinc-300 flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i>
+                <span id="snapshot-year-title" class="text-amber-400 font-mono">2026</span> World Telemetry
+              </h3>
+              <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">VERIFIED DATA</span>
+            </div>
 
-            <div class="grid grid-cols-2 gap-3">
-              <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-                <span class="text-[10px] text-zinc-400 block uppercase font-medium">Top Attraction</span>
-                <span id="stat-top-ace" class="text-xs sm:text-sm font-bold text-amber-400 truncate block mt-0.5">Cody Rhodes / Roman Reigns</span>
-                <span class="text-[10px] text-zinc-500">Reigning Aces</span>
+            <div class="grid grid-cols-2 gap-3.5">
+              <div class="stat-pod p-3.5 rounded-xl">
+                <span class="text-[10px] text-zinc-400 block uppercase font-bold tracking-wider">Top Attraction</span>
+                <span id="stat-top-ace" class="text-xs sm:text-sm font-extrabold text-amber-400 truncate block mt-1">Cody Rhodes / Roman Reigns</span>
+                <span class="text-[10px] text-zinc-500 block mt-0.5">Reigning Aces</span>
               </div>
-              <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-                <span class="text-[10px] text-zinc-400 block uppercase font-medium">Peak Single Gate</span>
-                <span id="stat-peak-gate" class="text-xs sm:text-sm font-bold text-emerald-400 truncate block mt-0.5">72,000 fans</span>
-                <span id="stat-peak-gate-event" class="text-[10px] text-zinc-500 truncate block">WrestleMania 42</span>
+              <div class="stat-pod p-3.5 rounded-xl">
+                <span class="text-[10px] text-zinc-400 block uppercase font-bold tracking-wider">Peak Single Gate</span>
+                <span id="stat-peak-gate" class="text-xs sm:text-sm font-extrabold text-emerald-400 truncate block mt-1 font-mono">72,000 fans</span>
+                <span id="stat-peak-gate-event" class="text-[10px] text-zinc-500 truncate block mt-0.5">WrestleMania 42</span>
               </div>
-              <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-                <span class="text-[10px] text-zinc-400 block uppercase font-medium">Est. Industry Scale</span>
-                <span id="stat-industry-val" class="text-xs sm:text-sm font-bold text-white block mt-0.5">$3.2 Billion</span>
-                <span class="text-[10px] text-zinc-500">Aggregated Gross</span>
+              <div class="stat-pod p-3.5 rounded-xl">
+                <span class="text-[10px] text-zinc-400 block uppercase font-bold tracking-wider">Est. Industry Scale</span>
+                <span id="stat-industry-val" class="text-xs sm:text-sm font-extrabold text-white block mt-1 font-mono">$3.2 Billion</span>
+                <span class="text-[10px] text-zinc-500 block mt-0.5">Aggregated Gross</span>
               </div>
-              <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-                <span class="text-[10px] text-zinc-400 block uppercase font-medium">Main Medium</span>
-                <span id="stat-media-medium" class="text-xs sm:text-sm font-bold text-cyan-400 block mt-0.5">Netflix Global Live</span>
-                <span class="text-[10px] text-zinc-500">Distribution</span>
+              <div class="stat-pod p-3.5 rounded-xl">
+                <span class="text-[10px] text-zinc-400 block uppercase font-bold tracking-wider">Main Medium</span>
+                <span id="stat-media-medium" class="text-xs sm:text-sm font-extrabold text-cyan-400 truncate block mt-1">Netflix Global Live</span>
+                <span class="text-[10px] text-zinc-500 block mt-0.5">Distribution</span>
               </div>
             </div>
 
             <!-- Milestone of the Year -->
-            <div class="bg-zinc-900 p-3.5 rounded-xl border border-zinc-800 space-y-1.5">
+            <div class="bg-gradient-to-br from-amber-500/10 via-dark-900 to-dark-950 p-4 rounded-xl border border-amber-500/25 space-y-2 shadow-inner">
               <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-amber-400 uppercase tracking-wide flex items-center gap-1.5">
+                <span class="text-xs font-extrabold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
                   <i data-lucide="bookmark" class="w-3.5 h-3.5"></i> Historic Pivot
                 </span>
-                <span class="text-[10px] font-mono bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded">CATALYST</span>
+                <span class="text-[10px] font-mono bg-amber-400/15 text-amber-300 border border-amber-400/25 px-2 py-0.5 rounded font-bold">CATALYST</span>
               </div>
-              <p id="milestone-desc" class="text-xs text-zinc-300 leading-relaxed">
+              <p id="milestone-desc" class="text-xs text-zinc-200 leading-relaxed">
                 Netflix transforms pro wrestling delivery into 190+ countries with simultaneous multi-lingual broadcasts, completing the streaming transition.
               </p>
             </div>
           </div>
 
           <!-- Regional Balance Gauge -->
-          <div class="surface-card p-5 space-y-3">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-400 flex items-center justify-between">
-              <span>Territory Power Distribution</span>
-              <span id="geo-year-label" class="font-mono text-amber-400">2026</span>
+          <div class="surface-card p-5 sm:p-6 space-y-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center justify-between border-b border-white/[0.08] pb-3">
+              <span class="flex items-center gap-2">
+                <i data-lucide="globe-2" class="w-4 h-4 text-amber-400"></i> Territory Power Share
+              </span>
+              <span id="geo-year-label" class="font-mono text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">2026</span>
             </h4>
             
-            <div class="space-y-2.5">
+            <div class="space-y-3.5 pt-1">
               <div>
-                <div class="flex justify-between text-xs mb-1">
-                  <span class="text-zinc-300 font-medium">North America (WWE, NWA/WCW, AWA, AEW)</span>
-                  <span id="geo-na-pct" class="font-mono text-zinc-400">78%</span>
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-zinc-300 font-semibold">North America <span class="text-zinc-500 font-normal">(WWE, WCW, AEW, NWA)</span></span>
+                  <span id="geo-na-pct" class="font-mono font-bold text-rose-400">78%</span>
                 </div>
-                <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-                  <div id="geo-na-bar" class="bg-rose-500 h-full rounded-full transition-all duration-300" style="width: 78%"></div>
+                <div class="w-full bg-dark-950 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/[0.06]">
+                  <div id="geo-na-bar" class="bg-gradient-to-r from-rose-600 to-rose-400 h-full rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(244,63,94,0.5)]" style="width: 78%"></div>
                 </div>
               </div>
 
               <div>
-                <div class="flex justify-between text-xs mb-1">
-                  <span class="text-zinc-300 font-medium">Japan / Puroresu (NJPW, AJPW, NOAH, Stardom)</span>
-                  <span id="geo-jp-pct" class="font-mono text-zinc-400">12%</span>
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-zinc-300 font-semibold">Japan / Puroresu <span class="text-zinc-500 font-normal">(NJPW, AJPW, NOAH, Stardom)</span></span>
+                  <span id="geo-jp-pct" class="font-mono font-bold text-indigo-400">12%</span>
                 </div>
-                <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-                  <div id="geo-jp-bar" class="bg-indigo-500 h-full rounded-full transition-all duration-300" style="width: 12%"></div>
+                <div class="w-full bg-dark-950 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/[0.06]">
+                  <div id="geo-jp-bar" class="bg-gradient-to-r from-indigo-600 to-indigo-400 h-full rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(99,102,241,0.5)]" style="width: 12%"></div>
                 </div>
               </div>
 
               <div>
-                <div class="flex justify-between text-xs mb-1">
-                  <span class="text-zinc-300 font-medium">Mexico / Lucha Libre (CMLL, AAA)</span>
-                  <span id="geo-mx-pct" class="font-mono text-zinc-400">10%</span>
+                <div class="flex justify-between text-xs mb-1.5">
+                  <span class="text-zinc-300 font-semibold">Mexico / Lucha Libre <span class="text-zinc-500 font-normal">(CMLL, AAA)</span></span>
+                  <span id="geo-mx-pct" class="font-mono font-bold text-cyan-400">10%</span>
                 </div>
-                <div class="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
-                  <div id="geo-mx-bar" class="bg-cyan-500 h-full rounded-full transition-all duration-300" style="width: 10%"></div>
+                <div class="w-full bg-dark-950 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/[0.06]">
+                  <div id="geo-mx-bar" class="bg-gradient-to-r from-cyan-600 to-cyan-400 h-full rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(6,182,212,0.5)]" style="width: 10%"></div>
                 </div>
               </div>
             </div>
@@ -307,65 +511,70 @@
     <section id="view-analytics" class="hidden space-y-6">
       
       <!-- Metrics Toolbar -->
-      <div class="surface-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
-            <i data-lucide="line-chart" class="w-5 h-5 text-amber-400"></i> Macro Historical Metrics
-          </h2>
-          <p class="text-xs text-zinc-400">Multi-decade time-series comparison across 46 continuous years.</p>
+      <div class="surface-card p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-400">
+            <i data-lucide="line-chart" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h2 class="font-display text-xl font-extrabold text-white">
+              Macro Historical Metrics
+            </h2>
+            <p class="text-xs text-zinc-400">Multi-decade time-series comparison across 46 continuous years.</p>
+          </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2">
-          <button onclick="updateChartMetric('power')" id="btn-metric-power" class="metric-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-amber-400 text-black">
+        <div class="flex flex-wrap items-center gap-2 bg-dark-950/80 p-1.5 rounded-xl border border-white/[0.07]">
+          <button onclick="updateChartMetric('power')" id="btn-metric-power" class="metric-btn px-3.5 py-1.5 text-xs font-bold rounded-lg bg-amber-400 text-black transition">
             Power Index (0–100)
           </button>
-          <button onclick="updateChartMetric('attendance')" id="btn-metric-attendance" class="metric-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
+          <button onclick="updateChartMetric('attendance')" id="btn-metric-attendance" class="metric-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">
             Peak Annual Gate (Fans)
           </button>
-          <button onclick="updateChartMetric('revenue')" id="btn-metric-revenue" class="metric-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
+          <button onclick="updateChartMetric('revenue')" id="btn-metric-revenue" class="metric-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">
             Annual Revenue ($M)
           </button>
-          <button onclick="updateChartMetric('viewership')" id="btn-metric-viewership" class="metric-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
+          <button onclick="updateChartMetric('viewership')" id="btn-metric-viewership" class="metric-btn px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition">
             TV / Stream Reach
           </button>
         </div>
       </div>
 
       <!-- Main Chart Container with Clean Interactive Filters -->
-      <div class="surface-card p-5 space-y-4">
+      <div class="surface-card p-5 sm:p-6 space-y-5">
         
         <!-- Interactive Promo Filter Container -->
         <div id="chart-promos-filter"></div>
 
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-zinc-800/80">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-3 border-t border-white/[0.08]">
           <div class="flex items-center gap-2">
-            <span id="chart-main-title" class="text-sm font-bold text-white">Historical Power Index (1980–2026)</span>
+            <span id="chart-main-title" class="font-display text-sm sm:text-base font-bold text-white">Historical Power Index (1980–2026)</span>
             <span class="text-xs text-zinc-400 font-mono" id="chart-metric-desc">• Multi-era normalized comparison</span>
           </div>
-          <span class="text-[11px] text-zinc-400">Tip: Click any promotion pill above to isolate or add to comparison</span>
+          <span class="text-[11px] text-zinc-400 bg-white/[0.03] px-2.5 py-1 rounded-md border border-white/[0.05]">Tip: Click any promotion pill above to isolate or toggle</span>
         </div>
 
-        <div class="h-[400px] w-full relative">
+        <div class="h-[420px] w-full relative bg-dark-950/50 p-3 rounded-xl border border-white/[0.05]">
           <canvas id="historicalChart"></canvas>
         </div>
       </div>
 
       <!-- Era Records Table Highlights -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="surface-card p-4 space-y-2 border-l-4 border-amber-400">
-          <span class="text-[10px] text-zinc-400 uppercase font-semibold">All-Time Peak Single Show Gate</span>
-          <h4 class="text-base font-black text-white">Collision in Korea (1995)</h4>
-          <p class="text-xs text-zinc-300">NJPW & WCW co-promoted at May Day Stadium, Pyongyang with an estimated <strong>150,000–165,000</strong> per night.</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="surface-card p-5 space-y-2 border-l-4 border-l-amber-400">
+          <span class="text-[10px] text-amber-400 uppercase font-mono font-bold tracking-wider">All-Time Peak Single Show Gate</span>
+          <h4 class="font-display text-base font-black text-white">Collision in Korea (1995)</h4>
+          <p class="text-xs text-zinc-300 leading-relaxed">NJPW &amp; WCW co-promoted at May Day Stadium, Pyongyang with an estimated <strong class="text-white font-mono">150,000–165,000</strong> per night.</p>
         </div>
-        <div class="surface-card p-4 space-y-2 border-l-4 border-rose-500">
-          <span class="text-[10px] text-zinc-400 uppercase font-semibold">Highest Rated US Cable Episode</span>
-          <h4 class="text-base font-black text-white">WWF RAW is WAR (May 10, 1999)</h4>
-          <p class="text-xs text-zinc-300">Drew an unprecedented <strong>8.1 Nielsen Rating</strong> (~10.7M live viewers) during peak Austin vs Corporate Ministry.</p>
+        <div class="surface-card p-5 space-y-2 border-l-4 border-l-rose-500">
+          <span class="text-[10px] text-rose-400 uppercase font-mono font-bold tracking-wider">Highest Rated US Cable Episode</span>
+          <h4 class="font-display text-base font-black text-white">WWF RAW is WAR (May 10, 1999)</h4>
+          <p class="text-xs text-zinc-300 leading-relaxed">Drew an unprecedented <strong class="text-white font-mono">8.1 Nielsen Rating</strong> (~10.7M live viewers) during peak Austin vs Corporate Ministry.</p>
         </div>
-        <div class="surface-card p-4 space-y-2 border-l-4 border-blue-500">
-          <span class="text-[10px] text-zinc-400 uppercase font-semibold">Largest Paid Stadium Turnstile</span>
-          <h4 class="text-base font-black text-white">AEW All In London (2023) / WM3</h4>
-          <p class="text-xs text-zinc-300">All In Wembley had <strong>81,035</strong> tickets distributed (72,265 turnstile) alongside WrestleMania III (78,000–93,173).</p>
+        <div class="surface-card p-5 space-y-2 border-l-4 border-l-blue-500">
+          <span class="text-[10px] text-blue-400 uppercase font-mono font-bold tracking-wider">Largest Paid Stadium Turnstile</span>
+          <h4 class="font-display text-base font-black text-white">AEW All In London (2023) / WM3</h4>
+          <p class="text-xs text-zinc-300 leading-relaxed">All In Wembley had <strong class="text-white font-mono">81,035</strong> tickets distributed (72,265 turnstile) alongside WrestleMania III (78,000–93,173).</p>
         </div>
       </div>
 
@@ -376,40 +585,46 @@
     <!-- ========================================== -->
     <section id="view-versus" class="hidden space-y-6">
       
-      <div class="surface-card p-5 sm:p-6">
+      <div class="surface-card p-5 sm:p-7">
         <div class="max-w-3xl">
-          <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
-            <i data-lucide="swords" class="w-5 h-5 text-amber-400"></i>
+          <h2 class="font-display text-xl sm:text-2xl font-extrabold text-white flex items-center gap-2.5">
+            <i data-lucide="swords" class="w-6 h-6 text-amber-400"></i>
             Head-to-Head Historical Matchup Simulator
           </h2>
-          <p class="text-xs text-zinc-300 mt-1">
+          <p class="text-xs sm:text-sm text-zinc-300 mt-1">
             Compare any two wrestling empires across any specific year in history (e.g., WWE 2026 vs AEW 2026, WWF 1998 vs WCW 1998, NJPW 1995 vs AJPW 1995).
           </p>
         </div>
 
         <!-- Selection Controls -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5 bg-zinc-900 p-4 rounded-xl border border-zinc-800">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 bg-dark-950/90 p-4 sm:p-5 rounded-2xl border border-white/[0.08] shadow-inner">
           
           <!-- Promotion A Selector -->
-          <div class="space-y-1">
-            <label class="text-[11px] font-semibold text-zinc-400 uppercase">Promotion A</label>
-            <select id="h2h-promo-a" class="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span> Promotion A (Corner 1)
+            </label>
+            <select id="h2h-promo-a" class="w-full text-white rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold">
               <!-- Options populated by JS -->
             </select>
           </div>
 
           <!-- Comparison Year Selector -->
-          <div class="space-y-1">
-            <label class="text-[11px] font-semibold text-zinc-400 uppercase">Comparison Year</label>
-            <select id="h2h-year" class="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-3 py-2 text-xs sm:text-sm font-mono focus:outline-none focus:border-amber-400">
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="calendar" class="w-3 h-3"></i> Comparison Year
+            </label>
+            <select id="h2h-year" class="w-full text-amber-400 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-mono font-bold">
               <!-- Populated by JS -->
             </select>
           </div>
 
           <!-- Promotion B Selector -->
-          <div class="space-y-1">
-            <label class="text-[11px] font-semibold text-zinc-400 uppercase">Promotion B</label>
-            <select id="h2h-promo-b" class="w-full bg-zinc-800 border border-zinc-700 text-white rounded-lg px-3 py-2 text-xs sm:text-sm focus:outline-none focus:border-amber-400">
+          <div class="space-y-1.5">
+            <label class="text-[11px] font-bold text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span> Promotion B (Corner 2)
+            </label>
+            <select id="h2h-promo-b" class="w-full text-white rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold">
               <!-- Options populated by JS -->
             </select>
           </div>
@@ -421,23 +636,23 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         <!-- Promo A Card (4 cols) -->
-        <div id="h2h-card-a" class="lg:col-span-4 surface-card p-5 border-t-4 border-rose-500 space-y-4">
+        <div id="h2h-card-a" class="lg:col-span-4 surface-card p-5 sm:p-6 border-t-4 border-t-rose-500 space-y-4">
           <!-- Dynamic info -->
         </div>
 
         <!-- Radar / Comparison Matrix (4 cols) -->
-        <div class="lg:col-span-4 surface-card p-5 space-y-4 text-center">
-          <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Head-to-Head Radar Profile</span>
-          <div class="h-64 relative">
+        <div class="lg:col-span-4 surface-card p-5 sm:p-6 space-y-4 text-center">
+          <span class="text-xs font-extrabold uppercase tracking-wider text-amber-400 block">Head-to-Head Radar Telemetry</span>
+          <div class="h-64 relative bg-dark-950/60 rounded-xl p-2 border border-white/[0.05]">
             <canvas id="h2hRadarChart"></canvas>
           </div>
-          <div id="h2h-verdict" class="p-3.5 bg-zinc-900 rounded-xl border border-zinc-800 text-xs text-zinc-300 leading-relaxed text-left">
+          <div id="h2h-verdict" class="p-4 bg-dark-950/90 rounded-xl border border-white/[0.08] text-xs text-zinc-300 leading-relaxed text-left">
             <!-- Dynamic verdict text -->
           </div>
         </div>
 
         <!-- Promo B Card (4 cols) -->
-        <div id="h2h-card-b" class="lg:col-span-4 surface-card p-5 border-t-4 border-amber-500 space-y-4">
+        <div id="h2h-card-b" class="lg:col-span-4 surface-card p-5 sm:p-6 border-t-4 border-t-amber-500 space-y-4">
           <!-- Dynamic info -->
         </div>
 
@@ -451,29 +666,33 @@
     <section id="view-promotions" class="hidden space-y-6">
       
       <!-- Filter & Search Toolbar -->
-      <div class="surface-card p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 class="text-xl font-extrabold text-white flex items-center gap-2">
-            <i data-lucide="book-open" class="w-5 h-5 text-amber-400"></i>
-            Promotions Encyclopedia
-          </h2>
-          <p class="text-xs text-zinc-400">Profiles, peak eras, legendary rosters, and historical records for all 14 major world companies.</p>
+      <div class="surface-card p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center text-amber-400">
+            <i data-lucide="book-open" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h2 class="font-display text-xl font-extrabold text-white">
+              Promotions Encyclopedia
+            </h2>
+            <p class="text-xs text-zinc-400">Profiles, peak eras, legendary rosters, and historical records for all 14 major world companies.</p>
+          </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2.5">
           <input 
             type="text" 
             id="search-promo-input" 
             placeholder="Search promotion, country, ace..." 
-            class="bg-zinc-900 border border-zinc-700 text-white rounded-lg px-3 py-1.5 text-xs w-48 sm:w-56 focus:outline-none focus:border-amber-400"
+            class="text-white rounded-xl px-3.5 py-2 text-xs w-52 sm:w-60 placeholder:text-zinc-500"
           >
-          <select id="filter-region-select" class="bg-zinc-900 border border-zinc-700 text-zinc-300 rounded-lg px-3 py-1.5 text-xs focus:outline-none">
+          <select id="filter-region-select" class="text-zinc-200 rounded-xl px-3.5 py-2 text-xs font-medium">
             <option value="ALL">All Regions (Global)</option>
-            <option value="USA">United States & Canada</option>
-            <option value="JAPAN">Japan (Puroresu & Joshi)</option>
+            <option value="USA">United States &amp; Canada</option>
+            <option value="JAPAN">Japan (Puroresu &amp; Joshi)</option>
             <option value="MEXICO">Mexico (Lucha Libre)</option>
           </select>
-          <select id="filter-status-select" class="bg-zinc-900 border border-zinc-700 text-zinc-300 rounded-lg px-3 py-1.5 text-xs focus:outline-none">
+          <select id="filter-status-select" class="text-zinc-200 rounded-xl px-3.5 py-2 text-xs font-medium">
             <option value="ALL">All Statuses</option>
             <option value="ACTIVE">Active in 2026</option>
             <option value="ACQUIRED">Acquired / Absorbed</option>
@@ -494,12 +713,12 @@
     <!-- ========================================== -->
     <section id="view-wars" class="hidden space-y-6">
       
-      <div class="surface-card p-5 sm:p-6 border-l-4 border-amber-400">
-        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
+      <div class="surface-card p-6 sm:p-7 border-l-4 border-l-amber-400">
+        <h2 class="font-display text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
           <i data-lucide="flame" class="w-6 h-6 text-amber-400"></i>
-          The Defining Wars & Hegemonies of Wrestling History
+          The Defining Wars &amp; Hegemonies of Wrestling History
         </h2>
-        <p class="text-xs sm:text-sm text-zinc-300 mt-1 max-w-4xl leading-relaxed">
+        <p class="text-xs sm:text-sm text-zinc-300 mt-1.5 max-w-4xl leading-relaxed">
           From the dismantling of the regional territory system in the 1980s to the billionaire battle of Monday Nitro vs RAW, the Japanese Dome Boom, and the modern multi-platform streaming war.
         </p>
       </div>
@@ -513,16 +732,19 @@
 
   </main>
 
-  <!-- Clean Minimal Footer -->
-  <footer class="surface-card border-t border-zinc-800/80 py-5 mt-10 text-xs text-zinc-400">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-      <div>
-        <strong class="text-zinc-200">Global Pro Wrestling Almanac (1980–2026)</strong> • Verified historical gate numbers, SEC filings & Nielsen archive data.
+  <!-- Clean Minimal Broadcast Footer -->
+  <footer class="border-t border-white/[0.08] bg-dark-950/90 backdrop-blur-md py-6 mt-12 text-xs text-zinc-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        <span>
+          <strong class="text-zinc-200 font-display">Global Pro Wrestling Almanac (1980–2026)</strong> • Verified historical gate numbers, SEC filings &amp; Nielsen archive data.
+        </span>
       </div>
-      <div class="flex items-center gap-3 font-mono text-[11px]">
-        <span>14 Global Promos</span>
-        <span>•</span>
-        <span>Modular Architecture</span>
+      <div class="flex items-center gap-3 font-mono text-[11px] bg-white/[0.03] px-3 py-1.5 rounded-lg border border-white/[0.06]">
+        <span class="text-amber-400 font-bold">14 Global Promos</span>
+        <span class="text-zinc-600">•</span>
+        <span class="text-zinc-300">Modular Architecture</span>
       </div>
     </div>
   </footer>
