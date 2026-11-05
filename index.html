@@ -1,588 +1,274 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WRESTLINGPROMOTIONS.COM | Global Index & Live Hub</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-          colors: { obsidian: '#050507', surface: '#0c0d12', glass: 'rgba(255,255,255,0.03)' }
-        }
-      }
-    }
-  </script>
-  <style>
-    body { background: #050507; color: #f4f4f5; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-    .ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(circle at 50% -10%, rgba(245,158,11,0.12), transparent 55%), radial-gradient(circle at 85% 20%, rgba(239,68,68,0.05), transparent 45%); }
-    .card { background: rgba(14,16,23,0.75); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.07); border-radius: 1.25rem; transition: all 0.3s cubic-bezier(0.16,1,0.3,1); }
-    .card:hover { border-color: rgba(255,255,255,0.14); transform: translateY(-2px); box-shadow: 0 20px 40px -20px rgba(0,0,0,0.8); }
-    .fade-up { animation: fadeUp 0.4s cubic-bezier(0.16,1,0.3,1) forwards; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    .spoiler-blur { filter: blur(10px); user-select: none; transition: filter 0.35s ease; }
-    .spoiler-revealed .spoiler-blur { filter: blur(0); user-select: auto; }
-    input[type="range"] { -webkit-appearance: none; background: rgba(255,255,255,0.08); height: 6px; border-radius: 99px; }
-    input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #f59e0b; cursor: pointer; box-shadow: 0 0 15px rgba(245,158,11,0.8); transition: transform 0.15s; }
-    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wrestling Promotions</title>
+<style>
+:root{--bg:#fafaf8;--surface:#fff;--ink:#141414;--muted:#6b6b66;--line:#e8e6e1;--accent:#d62828;--accent-ink:#fff;--chip:#f1efea;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e0e0f;--surface:#171718;--ink:#f3f2ee;--muted:#9a9993;--line:#2a2a2c;--accent:#ff4d4d;--accent-ink:#0e0e0f;--chip:#222224;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e0e0f;--surface:#171718;--ink:#f3f2ee;--muted:#9a9993;--line:#2a2a2c;--accent:#ff4d4d;--accent-ink:#0e0e0f;--chip:#222224;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+a{color:inherit;text-decoration:none}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em}
+.logo i{width:12px;height:12px;border-radius:3px;background:var(--accent);transform:rotate(45deg)}
+.actions{display:flex;gap:8px}
+.pill,.icon,select{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;font:inherit;font-size:14px;cursor:pointer;transition:border-color .2s}
+.pill{padding:8px 14px;display:inline-flex;gap:6px;align-items:center}
+select{padding:8px 14px}
+.icon{width:38px;height:38px;display:grid;place-items:center}
+.pill:hover,.icon:hover,select:hover{border-color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pill.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+#tabs::-webkit-scrollbar{display:none}
+#tabs .pill{white-space:nowrap}
+.hero{padding:48px 0 36px;max-width:640px}
+.eyebrow{font-size:13px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin:0 0 14px}
+h1{font-size:clamp(32px,6.5vw,60px);line-height:1.03;letter-spacing:-.035em;margin:0 0 14px;font-weight:750}
+h1 em{font-style:normal;color:var(--accent)}
+.sub{color:var(--muted);font-size:17px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;padding-bottom:48px}
+.card{position:relative;grid-column:span 4;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:8px;min-height:180px;overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+a.card:hover{transform:translateY(-3px);border-color:var(--ink);box-shadow:0 12px 30px -18px rgba(0,0,0,.35)}
+.w7{grid-column:span 7}.w5{grid-column:span 5}.w6{grid-column:span 6}.w12{grid-column:span 12}
+.num{font-size:12px;color:var(--muted)}
+.card h2{margin:0;font-size:20px;letter-spacing:-.02em;font-weight:650}
+.card h3{margin:0;font-size:16px;font-weight:650}
+.card p{margin:0;color:var(--muted);font-size:15px;max-width:36ch}
+.go{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;padding-top:14px}
+.go span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--chip);transition:.25s}
+a.card:hover .go span{background:var(--accent);color:var(--accent-ink);transform:translateX(4px)}
+.feature{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.feature p,.feature .num{color:color-mix(in srgb,var(--bg) 65%,transparent)}
+.feature .go span{background:color-mix(in srgb,var(--bg) 15%,transparent)}
+.tag{display:inline-block;font-size:12px;padding:4px 10px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:600;width:fit-content}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font-size:13px;padding:5px 11px;border-radius:999px;background:var(--chip)}
+.spoil{filter:blur(6px);transition:filter .3s;user-select:none}
+a.card:hover .spoil,.revealed .spoil{filter:none;user-select:auto}
+.rush{display:flex;gap:8px;margin-top:6px}
+.rush b{flex:1;height:44px;border-radius:10px 10px 4px 4px;background:var(--chip);border:1px dashed var(--line);display:grid;place-items:center;font-size:12px;color:var(--muted);font-weight:500}
+.rush b:last-child{border-color:var(--accent);color:var(--accent)}
+.view{display:none;padding-bottom:48px}
+.view.on{display:block}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:8px 0 18px}
+.bar h1{font-size:clamp(26px,5vw,38px);margin:0}
+.meta{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.soon{text-align:center;align-items:center;padding:56px 24px;max-width:560px;margin:24px auto}
+.soon p{max-width:40ch}
+.row{display:flex;justify-content:space-between;align-items:center;font-size:14px;gap:10px}
+.track{height:6px;border-radius:99px;background:var(--chip);overflow:hidden;margin-top:6px}
+.track div{height:100%;background:var(--accent);border-radius:99px;transition:width .4s}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.yrs{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.big{font-size:clamp(44px,9vw,72px);font-weight:750;letter-spacing:-.04em;line-height:1}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px}
+#tabs[hidden]{display:none}
+.seg{display:flex;gap:6px;overflow-x:auto;margin-bottom:18px;scrollbar-width:none}.seg::-webkit-scrollbar{display:none}
+.hp{display:none}.hp.on{display:block}
+.quad{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.quad div{display:flex;flex-direction:column;gap:2px;padding:12px;border-radius:14px;background:var(--chip)}
+.quad b{font-size:14px;font-weight:600}
+input.s{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;font:inherit;font-size:14px;padding:8px 14px;flex:1;min-width:180px}
+.cmpbars{display:grid;gap:14px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+svg.ch{width:100%;height:auto;display:block}
+@media(max-width:560px){.quad{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){.card,.w7,.w5,.w6{grid-column:span 6}}
+@media(max-width:560px){.card,.w7,.w5,.w6{grid-column:span 12;min-height:0}.pill .lbl{display:none}.hero{padding:32px 0 24px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-amber-400 selection:text-black">
-  <div class="ambient"></div>
+<body>
+<div class="wrap">
+<header>
+  <a class="logo" href="#home"><i></i>Wrestling Promotions</a>
+  <div class="actions">
+    <a class="pill" href="#home">🧋 <span class="lbl">Buy me a boba</span></a>
+    <button class="icon" id="theme" aria-label="Toggle light and dark mode">◐</button>
+  </div>
+</header>
+<nav id="tabs" hidden></nav>
 
-  <!-- Minimalist Floating Top Header & App Dock -->
-  <header class="sticky top-4 z-50 max-w-6xl w-full mx-auto px-4">
-    <div class="card px-4 py-2.5 flex items-center justify-between gap-3 bg-obsidian/80 shadow-2xl">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="setService('history')">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-black font-black shadow-[0_0_20px_rgba(245,158,11,0.35)]">W</div>
-        <div>
-          <span class="font-display font-bold text-sm tracking-tight text-white block leading-none">WRESTLING<span class="text-amber-400">PROMOTIONS</span></span>
-          <span class="text-[10px] font-mono text-zinc-500">GLOBAL ANALYTICS & LIVE DIRECTORY</span>
-        </div>
-      </div>
+<!-- HOME -->
+<section class="view on" id="v-home">
+  <div class="hero">
+    <p class="eyebrow">The wrestling hub</p>
+    <h1>Every match. Every title. <em>Zero spoilers.</em></h1>
+    <p class="sub">Guides, history and stats for pro wrestling fans. Pick a door.</p>
+  </div>
+  <div class="grid">
+    <a class="card feature w7" href="#guides"><span class="num">01</span><span class="tag">Soon</span><h2>Spoiler-Free Match Guides</h2><p>Know what’s at stake in every match before you press play. Never who wins.</p><div class="go">Get notified <span>→</span></div></a>
+    <a class="card w5" href="#champions"><span class="num">02</span><h2>Active Champions</h2><p>Who holds the gold right now? Hover or tap to reveal.</p><div class="chips" aria-hidden="true"><span class="chip spoil">Champion Name</span><span class="chip spoil">Tag Champs</span><span class="chip spoil">Women’s Champ</span></div><div class="go">Open tracker <span>→</span></div></a>
+    <a class="card" href="#watch"><span class="num">03</span><h2>Where to Watch</h2><p>Channels, streams and show times in your time zone.</p><div class="go">Find my channel <span>→</span></div></a>
+    <a class="card" href="#history"><span class="num">04</span><h2>History &amp; Stats</h2><p>Scrub through eras and see who ruled each one.</p><div class="go">Dig into the archive <span>→</span></div></a>
+        <a class="card" href="#rushmore"><span class="num">05</span><h2>Mount Rushmore</h2><p>Legends’ four greatest, then donate to carve your own.</p><div class="rush" aria-hidden="true"><b>1</b><b>2</b><b>3</b><b>You?</b></div><div class="go">Build yours <span>→</span></div></a>
+    <a class="card w6" href="#game"><span class="num">06</span><h2>Who Beat Who?</h2><p>Pick the winner, or call it a draw.</p><div class="go">Play a round <span>→</span></div></a>
+    <a class="card w6" href="#blog"><span class="num">07</span><h2>The Yap Blog</h2><p>Hot takes and whatever’s on my mind.</p><div class="go">Read the latest <span>→</span></div></a>
+  </div>
+</section>
 
-      <!-- 5 Core Services Navigation -->
-      <nav class="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5" id="service-nav">
-        <button onclick="setService('history')" data-srv="history" class="srv-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 bg-white text-black shadow-sm whitespace-nowrap"><i data-lucide="activity" class="w-3.5 h-3.5"></i>History & Stats</button>
-        <button onclick="setService('directory')" data-srv="directory" class="srv-btn px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="tv" class="w-3.5 h-3.5"></i>Viewing Directory</button>
-        <button onclick="setService('champions')" data-srv="champions" class="srv-btn px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>Champions Tracker</button>
-        <button onclick="setService('moments')" data-srv="moments" class="srv-btn px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="zap" class="w-3.5 h-3.5"></i>Top 5 Moments <span class="text-[9px] font-mono px-1.5 py-0.2 bg-zinc-800 text-zinc-400 rounded">SOON</span></button>
-        <button onclick="setService('guides')" data-srv="guides" class="srv-btn px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-400 hover:text-white transition flex items-center gap-1.5 whitespace-nowrap"><i data-lucide="book-open-check" class="w-3.5 h-3.5"></i>Match Guides <span class="text-[9px] font-mono px-1.5 py-0.2 bg-zinc-800 text-zinc-400 rounded">SOON</span></button>
-      </nav>
-    </div>
-  </header>
+<!-- CHAMPIONS -->
+<section class="view" id="v-champions">
+  <div class="bar"><div><p class="meta">Spoiler shield on</p><h1>Active Champions</h1></div>
+    <div class="actions"><select id="cf" aria-label="Promotion"><option value="ALL">All promotions</option><option>WWE</option><option>AEW</option><option>NJPW</option></select><button class="pill on" id="reveal">Reveal all</button></div></div>
+  <p class="sub" style="margin-bottom:18px">Tap a card to reveal its champion.</p>
+  <div class="grid" id="champs"></div>
+</section>
 
-  <!-- Main Content Container -->
-  <main class="relative z-10 flex-1 max-w-6xl w-full mx-auto px-4 pt-8 pb-16">
+<!-- WATCH -->
+<section class="view" id="v-watch">
+  <div class="bar"><div><p class="meta" id="tz">Your time zone</p><h1>Where to Watch</h1></div>
+    <select id="country" aria-label="Country"><option value="US">🇺🇸 United States</option><option value="AU">🇦🇺 Australia</option><option value="GB">🇬🇧 United Kingdom</option><option value="CA">🇨🇦 Canada</option><option value="JP">🇯🇵 Japan</option><option value="MX">🇲🇽 Mexico</option><option value="INT">🌍 International</option></select></div>
+  <div class="grid" id="shows"></div>
+</section>
 
-    <!-- ==================================================== -->
-    <!-- SERVICE 1: WRESTLING PROMOTION HISTORY & STATS       -->
-    <!-- ==================================================== -->
-    <section id="srv-history" class="space-y-6 fade-up">
-      <!-- Sub-Navigation Pill Bar -->
-      <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="inline-flex p-1 rounded-xl bg-white/[0.03] border border-white/[0.06]">
-          <button onclick="setSubTab('timeline')" data-sub="timeline" class="sub-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-400 text-black transition">Timeline (1980–2026)</button>
-          <button onclick="setSubTab('analytics')" data-sub="analytics" class="sub-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">Macro Charts</button>
-          <button onclick="setSubTab('versus')" data-sub="versus" class="sub-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">H2H Simulator</button>
-          <button onclick="setSubTab('encyclopedia')" data-sub="encyclopedia" class="sub-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">Encyclopedia</button>
-          <button onclick="setSubTab('wars')" data-sub="wars" class="sub-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">The Wars</button>
-        </div>
-        <div class="text-xs font-mono text-zinc-500 hidden sm:block">14 PROMOTIONS • 46 YEARS VERIFIED TELEMETRY</div>
-      </div>
+<!-- HISTORY -->
+<section class="view" id="v-history">
+  <div class="bar"><div><p class="meta">1980–2026 · 14 promotions</p><h1>History &amp; Stats</h1></div></div>
+  <div class="seg" id="hseg"></div>
 
-      <!-- SUBVIEW 1A: TIMELINE -->
-      <div id="sub-timeline" class="space-y-6 fade-up">
-        <div class="card p-6 sm:p-8">
-          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div class="space-y-2 max-w-2xl">
-              <div class="flex items-center gap-2">
-                <span id="tl-era" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-amber-400/15 text-amber-400 border border-amber-400/30"></span>
-                <span id="tl-span" class="text-xs font-mono text-zinc-500"></span>
-              </div>
-              <div class="flex items-baseline gap-3">
-                <h1 id="tl-year" class="font-display text-5xl sm:text-6xl font-extrabold text-white tracking-tight">2026</h1>
-                <span id="tl-val" class="text-xs font-mono text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20"></span>
-              </div>
-              <p id="tl-desc" class="text-sm text-zinc-400 leading-relaxed"></p>
-            </div>
+  <div class="hp on" id="hp-timeline"><div class="grid">
+    <div class="card w5"><span class="meta" id="t-era"></span><div class="big" id="t-year"></div><span class="chip" id="t-val" style="width:fit-content"></span><p id="t-desc" style="margin-top:6px"></p>
+      <input type="range" id="t-slider" min="0" max="8" step="1" value="8" aria-label="Era" style="margin-top:auto"><div class="yrs" id="t-ticks"></div></div>
+    <div class="card w7"><h3>Power rankings</h3><div id="t-rank" style="display:grid;gap:14px;margin-top:6px"></div></div>
+    <div class="card w12"><div class="quad" id="t-quad"></div></div>
+    <div class="card w6"><h3>Market share</h3><div id="t-geo" style="display:grid;gap:12px;margin-top:6px"></div></div>
+    <div class="card w6"><h3>Defining moment</h3><p id="t-ms" style="max-width:none"></p></div>
+  </div></div>
 
-            <!-- Minimalist Scrubber Controls -->
-            <div class="flex flex-col gap-3 bg-obsidian/70 p-4 rounded-2xl border border-white/[0.06] min-w-[280px]">
-              <div class="flex items-center justify-between gap-2">
-                <button onclick="stepYear(-1)" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                <button onclick="togglePlay()" id="play-btn" class="flex-1 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs flex items-center justify-center gap-1.5 transition"><i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i> <span id="play-lbl">AUTOPLAY ERAS</span></button>
-                <button onclick="stepYear(1)" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300 transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
-              </div>
-              <input type="range" id="tl-slider" min="0" max="8" step="1" value="8" oninput="renderTimeline(YEAR_KEYS[this.value])">
-              <div class="flex justify-between text-[10px] font-mono text-zinc-500" id="tl-ticks"></div>
-            </div>
-          </div>
+  <div class="hp" id="hp-compare">
+    <div class="bar" style="justify-content:flex-start"><select id="c-a" aria-label="First promotion"></select><span class="meta">vs</span><select id="c-b" aria-label="Second promotion"></select><select id="c-y" aria-label="Era"></select></div>
+    <div class="grid"><div class="card w6" id="c-ca"></div><div class="card w6" id="c-cb"></div>
+    <div class="card w12"><div class="cmpbars" id="c-bars"></div></div></div>
+  </div>
 
-          <!-- Telemetry Quad Pills -->
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-6 pt-6 border-t border-white/[0.06]" id="tl-quad"></div>
-        </div>
+  <div class="hp" id="hp-charts"><div class="card">
+    <div class="bar" style="margin-top:0"><h3>Across the eras</h3><div class="seg" id="mseg" style="margin:0"></div></div>
+    <svg class="ch" id="ch" viewBox="0 0 640 280" role="img" aria-label="Promotion metrics over time"></svg>
+    <div class="chips" id="ch-key"></div></div></div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div class="lg:col-span-8 card p-6 space-y-4">
-            <div class="flex justify-between items-center">
-              <h3 class="font-display font-bold text-sm uppercase tracking-wider text-zinc-400">Global Power Index Rankings</h3>
-              <span class="text-[11px] font-mono text-zinc-500">SCORE / REVENUE / GATE</span>
-            </div>
-            <div id="tl-leaderboard" class="space-y-2.5"></div>
-          </div>
-          <div class="lg:col-span-4 space-y-6">
-            <div class="card p-6 space-y-4">
-              <h3 class="font-display font-bold text-sm uppercase tracking-wider text-zinc-400">Territory Market Share</h3>
-              <div id="tl-geo" class="space-y-3"></div>
-            </div>
-            <div class="card p-6 bg-gradient-to-br from-amber-500/10 to-transparent border-amber-500/20 space-y-2">
-              <span class="text-[10px] font-mono font-bold uppercase text-amber-400 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Historic Catalyst</span>
-              <p id="tl-milestone" class="text-xs text-zinc-300 leading-relaxed"></p>
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="hp" id="hp-promos">
+    <div class="bar" style="justify-content:flex-start"><input class="s" id="e-q" placeholder="Search promotion or star" aria-label="Search"><select id="e-r" aria-label="Region"><option value="ALL">All regions</option><option value="USA">North America</option><option value="JAPAN">Japan</option><option value="MEXICO">Mexico</option></select></div>
+    <div class="grid" id="e-grid"></div>
+  </div>
 
-      <!-- SUBVIEW 1B: ANALYTICS -->
-      <div id="sub-analytics" class="hidden space-y-6 fade-up">
-        <div class="card p-6 space-y-5">
-          <div class="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 class="font-display text-lg font-bold text-white">46-Year Historical Telemetry</h2>
-              <p class="text-xs text-zinc-400">Compare power scores, attendance records, and annual gross revenue across eras.</p>
-            </div>
-            <div class="flex gap-1.5 bg-obsidian p-1 rounded-xl border border-white/[0.06]" id="metric-btns">
-              <button onclick="setChartMetric('score', 'Power Index (0-100)', 105)" class="m-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-400 text-black">Power</button>
-              <button onclick="setChartMetric('att', 'Peak Single Gate', 90000)" class="m-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400">Attendance</button>
-              <button onclick="setChartMetric('rev', 'Annual Gross ($M)', 1700)" class="m-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-zinc-400">Revenue ($M)</button>
-            </div>
-          </div>
-          <div class="h-[380px] w-full"><canvas id="mainChart"></canvas></div>
-        </div>
-      </div>
+  <div class="hp" id="hp-wars"><div class="grid" id="w-grid"></div></div>
+</section>
 
-      <!-- SUBVIEW 1C: H2H SIMULATOR -->
-      <div id="sub-versus" class="hidden space-y-6 fade-up">
-        <div class="card p-6 space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <select id="vs-a" onchange="renderVersus()" class="bg-obsidian border border-white/10 rounded-xl px-4 py-2.5 text-xs font-semibold text-white"></select>
-            <select id="vs-yr" onchange="renderVersus()" class="bg-obsidian border border-amber-400/30 rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-amber-400 text-center"></select>
-            <select id="vs-b" onchange="renderVersus()" class="bg-obsidian border border-white/10 rounded-xl px-4 py-2.5 text-xs font-semibold text-white"></select>
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            <div id="vs-card-a" class="lg:col-span-4 card p-5 bg-obsidian/50"></div>
-            <div class="lg:col-span-4 h-64"><canvas id="radarChart"></canvas></div>
-            <div id="vs-card-b" class="lg:col-span-4 card p-5 bg-obsidian/50"></div>
-          </div>
-        </div>
-      </div>
+<!-- SOON -->
+<section class="view" id="v-soon"><div class="card soon"><span class="tag">Coming soon</span><h2 id="s-title"></h2><p id="s-desc"></p><div class="chips" style="justify-content:center"><a class="pill" href="#champions">View champions</a><a class="pill" href="#history">Explore history</a></div></div></section>
 
-      <!-- SUBVIEW 1D: ENCYCLOPEDIA -->
-      <div id="sub-encyclopedia" class="hidden space-y-5 fade-up">
-        <div class="flex flex-wrap gap-3">
-          <input id="enc-search" oninput="renderEncyclopedia()" type="text" placeholder="Filter promotion, region, or legendary ace..." class="flex-1 min-w-[220px] bg-surface border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
-          <select id="enc-reg" onchange="renderEncyclopedia()" class="bg-surface border border-white/10 rounded-xl px-4 py-2.5 text-xs text-zinc-300">
-            <option value="ALL">All Regions</option><option value="USA">North America</option><option value="JAPAN">Japan</option><option value="MEXICO">Mexico</option>
-          </select>
-        </div>
-        <div id="enc-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-      </div>
+<footer><span>🧋 Community goal: help keep the archive growing.</span><span>Some links are affiliates or sponsors.</span></footer>
+</div>
 
-      <!-- SUBVIEW 1E: THE WARS -->
-      <div id="sub-wars" class="hidden space-y-4 fade-up"></div>
-    </section>
+<script>
+var $=function(i){return document.getElementById(i)};
+var NAV=[['guides','Match Guides'],['champions','Champions'],['watch','Where to Watch'],['history','History & Stats'],['rushmore','Mount Rushmore'],['game','Who Beat Who'],['blog','Blog']];
+var SOON={guides:['Spoiler-Free Match Guides','Storylines, stakes and card rundowns, without the outcomes.'],rushmore:['Mount Rushmore','Legends’ four greatest, plus yours if you donate.'],game:['Who Beat Who?','Pick the winner or call a draw.'],blog:['The Yap Blog','Anything I want to yap about.']};
+var LIVE=['champions','watch','history'];
 
-    <!-- ==================================================== -->
-    <!-- SERVICE 2: GLOBAL VIEWING DIRECTORY (LIVE API)       -->
-    <!-- ==================================================== -->
-    <section id="srv-directory" class="hidden space-y-6 fade-up">
-      <div class="card p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div class="space-y-1.5">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span class="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold">Auto-Localized Broadcast Telemetry</span>
-          </div>
-          <h1 class="font-display text-2xl sm:text-3xl font-extrabold text-white">Global Viewing Directory</h1>
-          <p class="text-xs sm:text-sm text-zinc-400">Broadcast channels, streaming platforms, and live air times automatically converted to your local timezone.</p>
-        </div>
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-obsidian/80 p-3.5 rounded-2xl border border-white/[0.07]">
-          <div class="text-right pr-2">
-            <span class="text-[10px] font-mono text-zinc-500 block">DETECTED ZONE</span>
-            <span id="dir-tz-label" class="text-xs font-mono font-bold text-amber-400">Detecting...</span>
-          </div>
-          <select id="dir-country" onchange="renderDirectory(this.value)" class="bg-surface border border-white/10 rounded-xl px-3.5 py-2 text-xs font-semibold text-white">
-            <option value="US">🇺🇸 United States</option>
-            <option value="AU">🇦🇺 Australia</option>
-            <option value="GB">🇬🇧 United Kingdom</option>
-            <option value="CA">🇨🇦 Canada</option>
-            <option value="JP">🇯🇵 Japan</option>
-            <option value="MX">🇲🇽 Mexico</option>
-            <option value="INT">🌍 Global / International</option>
-          </select>
-        </div>
-      </div>
-      <div id="dir-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-    </section>
+/* routing */
+function route(){
+  var h=(location.hash||'#home').slice(1);
+  var key=LIVE.indexOf(h)>-1||h==='home'?h:(SOON[h]?'soon':'home');
+  document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('on',v.id==='v-'+key)});
+  if(key==='soon'){$('s-title').textContent=SOON[h][0];$('s-desc').textContent=SOON[h][1]}
+  $('tabs').hidden=h==='home'||key==='home'&&h!=='home';
+  $('tabs').hidden=(key==='home');
+  $('tabs').innerHTML=NAV.map(function(n){return '<a class="pill'+(n[0]===h?' on':'')+'" href="#'+n[0]+'">'+n[1].replace('&','&amp;')+'</a>'}).join('');
+  window.scrollTo(0,0);
+}
+addEventListener('hashchange',route);
 
-    <!-- ==================================================== -->
-    <!-- SERVICE 3: ACTIVE CHAMPIONS TRACKER (SPOILER GUARD)  -->
-    <!-- ==================================================== -->
-    <section id="srv-champions" class="hidden space-y-6 fade-up">
-      <div class="card p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div class="space-y-1.5">
-          <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30">SPOILER SHIELD ACTIVE</span>
-            <span id="wiki-sync-badge" class="text-[10px] font-mono text-zinc-500">Syncing MediaWiki Live API...</span>
-          </div>
-          <h1 class="font-display text-2xl sm:text-3xl font-extrabold text-white">Active Champions Tracker</h1>
-          <p class="text-xs sm:text-sm text-zinc-400">Reigning titleholders across major divisions. Click any championship card to unblur and reveal the champion.</p>
-        </div>
-        <div class="flex items-center gap-2.5">
-          <select id="champ-filter" onchange="renderChampions()" class="bg-obsidian border border-white/10 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-white">
-            <option value="ALL">All Promotions</option><option value="WWE">WWE (Raw / SD / NXT)</option><option value="AEW">All Elite Wrestling</option><option value="NJPW">New Japan / Global</option>
-          </select>
-          <button onclick="toggleAllSpoilers()" id="spoiler-master-btn" class="px-4 py-2.5 rounded-xl bg-amber-400 text-black font-bold text-xs flex items-center gap-1.5 hover:bg-amber-300 transition">
-            <i data-lucide="eye" class="w-3.5 h-3.5"></i> <span>Reveal All</span>
-          </button>
-        </div>
-      </div>
-      <div id="champ-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-    </section>
+/* champions */
+var CH=[['WWE','SmackDown','Undisputed WWE Champion','Sami Zayn','Sep 11, 2026','Defeated CM Punk'],['WWE','RAW','World Heavyweight Champion','Roman Reigns','Apr 19, 2026','WrestleMania 42'],['WWE','RAW','Women’s World Champion','Liv Morgan','Oct 10, 2026','Triple Threat'],['WWE','SmackDown','WWE Women’s Champion','Chelsea Green','Aug 2, 2026','SummerSlam ladder match'],['WWE','RAW','Intercontinental Champion','Chad Gable','Aug 2, 2026','SummerSlam'],['WWE','SmackDown','United States Champion','Trick Williams','Sep 6, 2026','Defeated Baron Corbin'],['WWE','RAW','World Tag Team Champions','Bron Breakker & Austin Theory','Jul 6, 2026','Defeated Street Profits'],['WWE','SmackDown','WWE Tag Team Champions','Tama & Talla Tonga','Aug 14, 2026','Triple threat tag'],['WWE','NXT','NXT Champion','Grayson Waller','Aug 30, 2026','Fatal 4-Way'],['WWE','NXT','NXT Women’s Champion','Kelani Jordan','Aug 30, 2026','Defeated Kendal Grey'],['AEW','AEW','World Champion','Will Ospreay','Aug 30, 2026','All In London'],['AEW','AEW','Women’s World Champion','Mercedes Moné','Aug 30, 2026','All In London'],['AEW','AEW','International Champion','Kazuchika Okada','Aug 30, 2026','3-Way match'],['AEW','AEW','Continental Champion','Jon Moxley','Dec 27, 2025','Worlds End'],['AEW','AEW','TNT Champion','Darby Allin','Aug 30, 2026','Falls Count Anywhere'],['AEW','AEW','TBS Champion','Persephone','Aug 30, 2026','Defeated Maya World'],['AEW','AEW','World Tag Team Champions','The Young Bucks','Sep 26, 2026','All Out ladder match'],['AEW','AEW','World Trios Champions','Hangman Page, Brody King & Bandido','Oct 17, 2026','WrestleDream'],['NJPW','TNA','TNA World Champion','Leon Slater','2026','Youngest TNA World Champion'],['NJPW','ROH','ROH World Champion','Bandido','2026','Also AEW Trios Champion'],['NJPW','ROH','ROH Women’s World Champion','Athena','Ongoing','Multi-year reign']];
+var all=false;
+function champs(){
+  var f=$('cf').value;
+  $('champs').innerHTML=CH.filter(function(c){return f==='ALL'||c[0]===f}).map(function(c){
+    return '<button class="card'+(all?' revealed':'')+'" style="text-align:left;font:inherit;color:inherit;cursor:pointer" onclick="this.classList.toggle(\'revealed\')"><span class="num">'+c[0]+' · '+c[1]+'</span><h3>'+c[2]+'</h3><div class="spoil" style="margin-top:8px"><div style="font-size:19px;font-weight:700;letter-spacing:-.02em">'+c[3]+'</div><div class="num" style="margin-top:4px">'+c[4]+' · '+c[5]+'</div></div></button>'}).join('');
+}
+$('cf').onchange=champs;
+$('reveal').onclick=function(){all=!all;this.textContent=all?'Hide all':'Reveal all';champs()};
 
-    <!-- ==================================================== -->
-    <!-- SERVICE 4 & 5: COMING SOON (EDITORIAL / MANUAL)      -->
-    <!-- ==================================================== -->
-    <section id="srv-moments" class="hidden fade-up"></section>
-    <section id="srv-guides" class="hidden fade-up"></section>
+/* where to watch */
+var SH=[['WWE Monday Night RAW','WWE',1,20,0,'America/New_York','3 hrs',{US:'Netflix',AU:'Netflix',GB:'Netflix',CA:'Netflix',JP:'ABEMA',MX:'Netflix',INT:'Netflix'}],['WWE NXT','WWE',2,20,0,'America/New_York','2 hrs',{US:'The CW',AU:'Netflix',GB:'Netflix',CA:'Netflix',JP:'ABEMA',MX:'Netflix',INT:'Netflix'}],['AEW Dynamite','AEW',3,20,0,'America/New_York','2 hrs',{US:'TBS & Max',AU:'Kayo / Triller',GB:'ITV4 & TrillerTV',CA:'TSN+',JP:'NJPW World',MX:'Fox Sports MX',INT:'TrillerTV'}],['TNA iMPACT!','TNA',4,20,0,'America/New_York','2 hrs',{US:'AXS TV & TNA+',AU:'TNA+',GB:'TNA+',CA:'Sportsnet 360',JP:'TNA+',MX:'MVStv',INT:'TNA+'}],['WWE SmackDown','WWE',5,20,0,'America/New_York','3 hrs',{US:'USA Network',AU:'Netflix',GB:'Netflix',CA:'Netflix',JP:'ABEMA',MX:'Netflix',INT:'Netflix'}],['CMLL Viernes Espectacular','CMLL',5,20,30,'America/Mexico_City','2.5 hrs',{US:'CMLL YouTube',AU:'CMLL YouTube',GB:'CMLL YouTube',CA:'CMLL YouTube',JP:'Samurai TV',MX:'TUDN',INT:'YouTube'}],['AEW Collision','AEW',6,20,0,'America/New_York','2 hrs',{US:'TNT & Max',AU:'Kayo / Triller',GB:'ITV4 & TrillerTV',CA:'TSN+',JP:'NJPW World',MX:'Fox Sports MX',INT:'TrillerTV'}],['NJPW Weekly','NJPW',6,18,0,'Asia/Tokyo','3 hrs',{US:'NJPW World',AU:'NJPW World',GB:'NJPW World',CA:'NJPW World',JP:'TV Asahi / NJPW World',MX:'NJPW World',INT:'NJPW World'}]];
+var TZ=Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
+function nextAir(s){
+  var f=new Intl.DateTimeFormat('en-US',{timeZone:s[5],weekday:'short',hour:'numeric',minute:'numeric',hourCycle:'h23'});
+  var D=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],t=Math.ceil(Date.now()/18e5)*18e5;
+  for(var i=0;i<400;i++,t+=18e5){
+    var p={};f.formatToParts(new Date(t)).forEach(function(x){p[x.type]=x.value});
+    if(D.indexOf(p.weekday)===s[2]&&+p.hour===s[3]&&+p.minute===s[4])
+      return new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'short',hour:'numeric',minute:'2-digit'}).format(new Date(t));
+  }return '';
+}
+function shows(){
+  var c=$('country').value;$('tz').textContent=TZ.replace('_',' ');
+  $('shows').innerHTML=SH.map(function(s){return '<div class="card"><span class="num">'+s[1]+' · '+s[6]+'</span><h3>'+s[0]+'</h3><div class="chips"><span class="chip">'+nextAir(s)+'</span></div><div class="go"><span style="width:auto;background:none;border-radius:0;font-weight:600">'+(s[7][c]||s[7].INT)+'</span></div></div>'}).join('');
+}
+$('country').onchange=shows;
 
-  </main>
+/* history */
+var P={wwe:['WWE','World Wrestling Entertainment',1953,'Active','USA','#EF4444','WrestleMania','80,676 (WM 32)','Hogan, Austin, Rock, Cena, Reigns','The commercial giant of wrestling, now on Netflix and Peacock.'],aew:['AEW','All Elite Wrestling',2019,'Active','USA','#F59E0B','All In','81,035 (All In 2023)','Ospreay, Moxley, Omega, MJF','Launched in 2019 with stadium shows and fast-paced cards.'],njpw:['NJPW','New Japan Pro-Wrestling',1972,'Active','JAPAN','#DC2626','Wrestle Kingdom','67,000 (Tokyo Dome)','Inoki, Muto, Tanahashi, Okada','Home of Strong Style, the G1 Climax and January 4 at the Tokyo Dome.'],wcw:['WCW','World Championship Wrestling',1988,'Acquired','USA','#3B82F6','Starrcade','41,412 (Nitro 1998)','Flair, Sting, Hogan, Goldberg','Turner’s powerhouse that won 83 straight weeks against RAW.'],cmll:['CMLL','Consejo Mundial de Lucha Libre',1933,'Active','MEXICO','#06B6D4','Aniversario','18,000+ (Arena México)','El Santo, Atlantis, Místico','The world’s oldest active promotion, based in Arena México.'],aaa:['AAA','Lucha Libre AAA Worldwide',1992,'Active','MEXICO','#F97316','TripleManía','48,000 (TripleManía I)','Konnan, Mysterio, Vikingo','High-flying, colorful lucha libre with stadium shows.'],ajpw:['AJPW','All Japan Pro Wrestling',1972,'Active','JAPAN','#6366F1','Champion Carnival','58,300 (Tokyo Dome 1998)','Baba, Misawa, Kobashi, Kawada','Home of the Four Pillars and King’s Road style.'],tna:['TNA','Total Nonstop Action',2002,'Active','USA','#10B981','Bound For Glory','8,100 (Alamodome)','AJ Styles, Angle, Joe, Slater','Pioneered the X-Division and Knockouts.'],stardom:['STARDOM','World Wonder Ring Stardom',2010,'Active','JAPAN','#EC4899','Grand Queendom','5,539 (Yokohama)','Iwatani, Giulia, Maika','The premier modern joshi promotion.'],noah:['NOAH','Pro Wrestling NOAH',2000,'Active','JAPAN','#14B8A6','Destiny','44,000 (Dome 2005)','Misawa, Kobashi, KENTA','Founded by Misawa; legendary GHC title bouts.'],ecw:['ECW','Extreme Championship Wrestling',1992,'Acquired','USA','#8B5CF6','Barely Legal','6,000 (Anarchy Rulz)','RVD, Taz, Sabu, Dreamer','Philadelphia’s hardcore counterculture.'],roh:['ROH','Ring of Honor',2002,'Active','USA','#991B1B','Supercard of Honor','16,534 (MSG 2019)','Danielson, Punk, Briscoes','The independent incubator for future main eventers.'],nwa:['NWA / JCP','National Wrestling Alliance',1948,'Active','USA','#84CC16','Starrcade','26,500 (Starrcade 86)','Race, Flair, Dusty Rhodes','The territorial alliance behind North American wrestling.'],awa:['AWA','American Wrestling Association',1960,'Defunct','USA','#A855F7','SuperClash','20,300 (Comiskey 86)','Gagne, Bockwinkel, Hogan','The Midwest territory that launched Hulkamania.']};
+/* era: [name, span, industry value, medium, top attraction, peak gate, flagship, description, moment, [NA,JP,MX], ranks[id,power,revenue $M,gate,star]] */
+var E={1980:['Territory Era','1980–84','$65M','Regional TV','Inoki / Race',36295,'Showdown at Shea','The NWA controls borders while Japan packs arenas.','Sammartino vs. Zbyszko in a steel cage at Shea Stadium.',[55,30,15],[['nwa',88,25,22000,'Harley Race'],['njpw',85,22,30000,'Antonio Inoki'],['wwe',80,18,36295,'Bruno Sammartino'],['ajpw',76,16,18000,'Giant Baba'],['cmll',70,10,16500,'El Santo']]],
+1983:['Dawn of Starrcade','1980–84','$90M','Closed-circuit TV','Flair / Hogan',25000,'Starrcade ’83','Crockett stages Starrcade while McMahon goes national.','Flair beats Race at Starrcade ’83, proving the supercard model.',[60,28,12],[['nwa',92,32,25000,'Ric Flair'],['wwe',86,28,26000,'Hulk Hogan'],['njpw',84,24,28000,'Antonio Inoki'],['ajpw',78,18,16000,'Stan Hansen'],['awa',72,12,18000,'Bockwinkel']]],
+1987:['Golden Boom','1985–91','$180M','PPV & NBC','Hogan / Savage',78000,'WrestleMania III','WrestleMania III shatters indoor attendance records.','Hogan slams Andre the Giant before a Silverdome crowd.',[68,22,10],[['wwe',98,95,78000,'Hulk Hogan'],['nwa',86,40,25000,'Ric Flair'],['njpw',82,30,35000,'Antonio Inoki'],['ajpw',79,26,20000,'Jumbo Tsuruta'],['cmll',65,11,18000,'Atlantis']]],
+1993:['Dome & Lucha Boom','1992–95','$220M','Cable & dome shows','Misawa / Hashimoto',63500,'Jan 4 Tokyo Dome','Japanese dome shows boom while AAA draws 48,000.','AAA’s TripleManía I ignites the 90s lucha boom.',[45,38,17],[['njpw',92,55,63500,'Hashimoto'],['ajpw',90,48,58000,'Misawa'],['wwe',82,72,29045,'Bret Hart'],['aaa',80,25,48000,'Konnan'],['wcw',75,45,12000,'Sting']]],
+1998:['Monday Night Wars','1996–2001','$650M','Prime-time cable','Austin / Goldberg',41412,'Nitro, Georgia Dome','Austin and The Rock battle the nWo and Goldberg.','Goldberg beats Hogan on Nitro in front of 41,412.',[75,18,7],[['wwe',99,250,30000,'Steve Austin'],['wcw',96,220,41412,'Goldberg'],['njpw',84,65,65000,'Keiji Muto'],['ajpw',82,52,58300,'Kobashi'],['ecw',68,14,6000,'RVD']]],
+2005:['Ruthless Aggression','2002–09','$480M','Cable, PPV, DVD','Cena / Batista',44000,'NOAH Destiny','Cena and Batista rise; NOAH fills the Tokyo Dome.','NOAH draws 44,000 to the Tokyo Dome.',[65,25,10],[['wwe',98,371,20193,'John Cena'],['noah',80,28,44000,'Kobashi'],['njpw',74,24,35000,'Nakamura'],['tna',72,20,4000,'AJ Styles'],['cmll',70,14,18000,'Místico']]],
+2014:['OTT Dawn','2010–17','$850M','WWE Network, NJPW World','Bryan / Okada',75167,'WrestleMania XXX','WWE pioneers streaming; Okada and Tanahashi peak.','Daniel Bryan wins at WrestleMania XXX as the WWE Network launches.',[70,20,10],[['wwe',99,542,75167,'Cena / Bryan'],['njpw',85,35,35000,'Okada'],['cmll',70,16,17500,'Atlantis'],['aaa',69,15,22000,'Psycho Clown'],['roh',64,9,3000,'Adam Cole']]],
+2023:['Stadium Renaissance','2018–24','$2.4B','Cable, Peacock, stadiums','Reigns / Omega',81035,'AEW All In Wembley','AEW fills Wembley and WWE merges into TKO.','All In sets the Wembley record; TKO Group forms.',[76,14,10],[['wwe',99,1330,80497,'Roman Reigns'],['aew',88,175,81035,'MJF / Omega'],['njpw',78,40,26085,'Okada'],['cmll',74,18,18000,'Místico'],['stardom',70,15,5539,'Giulia']]],
+2026:['Global Streaming','2025–26','$3.2B','Netflix, Max, PLEs','Reigns / Ospreay',72000,'WrestleMania 42','RAW streams globally on Netflix; alliances thrive.','Netflix unifies live wrestling across 190+ countries.',[78,12,10],[['wwe',100,1650,72000,'Reigns / Zayn'],['aew',89,210,55000,'Will Ospreay'],['njpw',79,42,28000,'Zack Sabre Jr.'],['cmll',76,22,18000,'Místico'],['stardom',72,18,6000,'Maika']]]};
+var WARS=[['1983–88','Territory Consolidation: WWF vs. NWA & AWA','WWF goes national','McMahon bought regional TV slots and signed Hogan, Piper and Savage. Crockett fought back with Starrcade before selling to Turner in 1988.'],['1995–2001','Monday Night Wars: RAW vs. Nitro','WWF buys WCW & ECW','Nitro and the nWo beat RAW for 83 straight weeks. Austin, Rock and McMahon ignited the Attitude Era and flipped the ratings.'],['1990–2000','Puroresu Golden Age: NJPW vs. AJPW','50,000+ dome sellouts','NJPW drew 60,000+ to the Tokyo Dome. AJPW’s Four Pillars set the in-ring standard.'],['2019–26','Streaming Boom: WWE vs. AEW','Global streaming rights','AEW packed Wembley while WWE joined TKO and signed a $5B Netflix deal.']];
+var YK=Object.keys(E),HS=[['timeline','Timeline'],['compare','Compare'],['charts','Charts'],['promos','Promotions'],['wars','The Wars']],MS=[[1,'Power'],[2,'Revenue'],[3,'Gate']],metric=1;
+var bar=function(n,l,v,c){return '<div><div class="row"><span>'+l+'</span><span class="meta">'+v+'</span></div><div class="track"><div style="width:'+n+'%'+(c?';background:'+c:'')+'"></div></div></div>'};
+function hp(n){HS.forEach(function(h){$('hp-'+h[0]).classList.toggle('on',h[0]===n)});document.querySelectorAll('#hseg .pill').forEach(function(b){b.classList.toggle('on',b.dataset.k===n)})}
+function tl(i){var y=YK[i],e=E[y],g=e[9];
+  $('t-year').textContent=y;$('t-era').textContent=e[0]+' · '+e[1];$('t-val').textContent=e[2]+' industry';$('t-desc').textContent=e[7];$('t-ms').textContent=e[8];
+  $('t-quad').innerHTML=[['Top attraction',e[4]],['Peak gate',e[5].toLocaleString()],['Flagship',e[6]],['Medium',e[3]]].map(function(x){return '<div><span class="meta">'+x[0]+'</span><b>'+x[1]+'</b></div>'}).join('');
+  $('t-rank').innerHTML=e[10].map(function(r,n){return bar(r[1],(n+1)+'. <b>'+P[r[0]][0]+'</b> <span class="meta">'+r[4]+'</span>','$'+r[2]+'M · '+r[3].toLocaleString()+' · '+r[1])}).join('');
+  $('t-geo').innerHTML=[['North America',g[0]],['Japan',g[1]],['Mexico',g[2]]].map(function(x){return bar(x[1],x[0],x[1]+'%')}).join('');}
+function pick(e,id){return e[10].filter(function(r){return r[0]===id})[0]||[id,0,0,0,'Not ranked']}
+function cmp(){var a=$('c-a').value,b=$('c-b').value,e=E[$('c-y').value],ra=pick(e,a),rb=pick(e,b);
+  var card=function(id,r){var p=P[id];return '<span class="num">'+p[3]+' · est. '+p[2]+'</span><h2>'+p[0]+'</h2><p>'+p[9]+'</p><div class="row" style="margin-top:6px"><span class="meta">Top star</span><b>'+r[4]+'</b></div><div class="row"><span class="meta">Record gate</span><b>'+p[7]+'</b></div>'};
+  $('c-ca').innerHTML=card(a,ra);$('c-cb').innerHTML=card(b,rb);
+  var m=function(k,l,f){var mx=Math.max(ra[k],rb[k],1);return '<div><div class="row"><span>'+l+'</span><span class="meta">'+f(ra[k])+' vs '+f(rb[k])+'</span></div><div class="track"><div style="width:'+ra[k]/mx*100+'%"></div></div><div class="track"><div style="width:'+rb[k]/mx*100+'%;background:var(--ink)"></div></div></div>'};
+  $('c-bars').innerHTML=m(1,'Power',String)+m(2,'Revenue',function(v){return '$'+v+'M'})+m(3,'Peak gate',function(v){return v.toLocaleString()});}
+function chart(){var W=640,H=280,L=40,B=26,T=10,ks=Object.keys(P),mx=0;
+  ks.forEach(function(k){YK.forEach(function(y){var r=pick(E[y],k);if(r[metric]>mx)mx=r[metric]})});
+  var x=function(i){return L+i*(W-L-12)/(YK.length-1)},y=function(v){return T+(H-T-B)*(1-v/mx)},o='';
+  for(var q=0;q<=4;q++){var v=mx*q/4;o+='<line x1="'+L+'" x2="'+W+'" y1="'+y(v)+'" y2="'+y(v)+'" style="stroke:var(--line)"/><text x="0" y="'+(y(v)+4)+'" font-size="10" style="fill:var(--muted)">'+(metric===3?Math.round(v/1000)+'k':Math.round(v))+'</text>'}
+  YK.forEach(function(yr,i){o+='<text x="'+x(i)+'" y="'+(H-6)+'" font-size="10" text-anchor="middle" style="fill:var(--muted)">'+yr+'</text>'});
+  var used=[];ks.forEach(function(k){var d='',on=0;YK.forEach(function(yr,i){var r=E[yr][10].filter(function(z){return z[0]===k})[0];if(r){d+=(on?'L':'M')+x(i)+' '+y(r[metric])+' ';on=1;}else on=0});
+    if(d){used.push(k);o+='<path d="'+d+'" fill="none" stroke="'+P[k][5]+'" stroke-width="2" stroke-linejoin="round"/>'}});
+  $('ch').innerHTML=o;$('ch-key').innerHTML=used.map(function(k){return '<span class="chip"><i class="dot" style="background:'+P[k][5]+'"></i>'+P[k][0]+'</span>'}).join('');
+  document.querySelectorAll('#mseg .pill').forEach(function(b){b.classList.toggle('on',+b.dataset.k===metric)})}
+function enc(){var q=$('e-q').value.toLowerCase(),r=$('e-r').value;
+  $('e-grid').innerHTML=Object.keys(P).map(function(k){return P[k]}).filter(function(p){return(r==='ALL'||p[4]===r)&&(p[0]+p[1]+p[8]).toLowerCase().indexOf(q)>-1}).map(function(p){return '<div class="card" style="border-top:3px solid '+p[5]+'"><span class="num">'+p[3]+' · est. '+p[2]+' · '+p[4]+'</span><h2>'+p[0]+'</h2><p>'+p[9]+'</p><div class="row" style="margin-top:8px"><span class="meta">Flagship</span><b>'+p[6]+'</b></div><div class="row"><span class="meta">Record gate</span><b>'+p[7]+'</b></div><div class="row"><span class="meta">Icons</span><b style="text-align:right">'+p[8]+'</b></div></div>'}).join('')||'<p class="sub">No matches.</p>'}
+function hist(){
+  $('hseg').innerHTML=HS.map(function(h){return '<button class="pill'+(h[0]==='timeline'?' on':'')+'" data-k="'+h[0]+'" onclick="hp(\''+h[0]+'\')">'+h[1]+'</button>'}).join('');
+  $('mseg').innerHTML=MS.map(function(m){return '<button class="pill" data-k="'+m[0]+'" onclick="metric='+m[0]+';chart()">'+m[1]+'</button>'}).join('');
+  $('t-ticks').innerHTML=YK.map(function(y){return '<span>'+y.slice(2)+'</span>'}).join('');
+  var ops=Object.keys(P).map(function(k){return '<option value="'+k+'">'+P[k][0]+'</option>'}).join('');
+  $('c-a').innerHTML=ops;$('c-b').innerHTML=ops;$('c-a').value='wwe';$('c-b').value='aew';
+  $('c-y').innerHTML=YK.slice().reverse().map(function(y){return '<option>'+y+'</option>'}).join('');
+  $('w-grid').innerHTML=WARS.map(function(w){return '<div class="card w6"><span class="num">'+w[0]+'</span><h3>'+w[1]+'</h3><span class="chip" style="width:fit-content">'+w[2]+'</span><p style="max-width:none">'+w[3]+'</p></div>'}).join('');
+  $('t-slider').oninput=function(){tl(this.value)};$('c-a').onchange=$('c-b').onchange=$('c-y').onchange=cmp;$('e-q').oninput=$('e-r').onchange=enc;
+  tl(8);cmp();chart();enc();}
 
-  <footer class="border-t border-white/[0.06] py-6 text-center text-[11px] font-mono text-zinc-600">
-    WRESTLINGPROMOTIONS.COM • ZERO-KEY LIVE TELEMETRY & ARCHIVAL ENGINE (1980–2026)
-  </footer>
+/* theme */
+(function(){var r=document.documentElement;try{var s=localStorage.getItem('wp-theme');if(s)r.setAttribute('data-theme',s)}catch(e){}
+$('theme').onclick=function(){var c=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'),n=c==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('wp-theme',n)}catch(e){}}})();
 
-  <script>
-    // 1. COMPACT ARCHIVAL DATA (1980-2026)
-    const PROMOS = {
-      wwe: { id:'wwe', name:'WWE', full:'World Wrestling Entertainment', yr:1953, st:'ACTIVE', reg:'USA', em:'👑', col:'#EF4444', ev:'WrestleMania', gate:'80,676 (WM 32)', aces:'Hogan, Austin, Rock, Cena, Reigns, Rhodes', bio:'The commercial giant of pro wrestling, spanning global broadcast, PPV, and multi-billion-dollar Netflix & Peacock streaming deals.' },
-      aew: { id:'aew', name:'AEW', full:'All Elite Wrestling', yr:2019, st:'ACTIVE', reg:'USA', em:'🔥', col:'#F59E0B', ev:'All In London', gate:'81,035 (All In 23)', aces:'Ospreay, Moxley, Omega, Swerve, MJF, Moné', bio:'Launched in 2019 backed by Warner Bros Discovery, packing international stadiums and delivering high-octane athletic cards.' },
-      njpw: { id:'njpw', name:'NJPW', full:'New Japan Pro-Wrestling', yr:1972, st:'ACTIVE', reg:'JAPAN', em:'🦁', col:'#DC2626', ev:'Wrestle Kingdom', gate:'67,000 (Tokyo Dome)', aces:'Inoki, Muto, Hashimoto, Tanahashi, Okada, ZSJ', bio:'The King of Sports and home of Strong Style, famous for January 4 Tokyo Dome supershows and the grueling G1 Climax.' },
-      wcw: { id:'wcw', name:'WCW', full:'World Championship Wrestling', yr:1988, st:'ACQUIRED', reg:'USA', em:'⚡', col:'#3B82F6', ev:'Starrcade', gate:'41,412 (Nitro 98)', aces:'Flair, Sting, Hollywood Hogan, Goldberg, DDP', bio:'Ted Turner & Eric Bischoff’s powerhouse that beat WWF RAW for 83 straight weeks during the 1990s Monday Night Wars.' },
-      cmll: { id:'cmll', name:'CMLL', full:'Consejo Mundial de Lucha Libre', yr:1933, st:'ACTIVE', reg:'MEXICO', em:'🎭', col:'#06B6D4', ev:'Aniversario', gate:'18,000+ (Arena México)', aces:'El Santo, Atlantis, Místico, Último Guerrero', bio:'The world’s oldest active promotion, running multiple weekly spectacles out of the Cathedral of Lucha Libre: Arena México.' },
-      aaa: { id:'aaa', name:'AAA', full:'Lucha Libre AAA Worldwide', yr:1992, st:'ACTIVE', reg:'MEXICO', em:'🎉', col:'#F97316', ev:'TripleManía', gate:'48,000 (TripleManía I)', aces:'Konnan, Rey Mysterio, Hijo del Santo, Vikingo', bio:'Revolutionized Mexican wrestling with high-flying cruiserweights, vibrant characters, and massive stadium TripleManía shows.' },
-      ajpw: { id:'ajpw', name:'AJPW', full:'All Japan Pro Wrestling', yr:1972, st:'ACTIVE', reg:'JAPAN', em:'🥋', col:'#6366F1', ev:'Champion Carnival', gate:'58,300 (Tokyo Dome 98)', aces:'Giant Baba, Jumbo, Misawa, Kobashi, Kawada', bio:'Home of Giant Baba’s Four Pillars of Heaven and the critically revered 1990s King’s Road style.' },
-      tna: { id:'tna', name:'TNA', full:'Total Nonstop Action Wrestling', yr:2002, st:'ACTIVE', reg:'USA', em:'⚔️', col:'#10B981', ev:'Bound For Glory', gate:'8,100 (Alamodome)', aces:'AJ Styles, Kurt Angle, Samoa Joe, Sting, Slater', bio:'Pioneered the high-wire X-Division and Knockouts division, enjoying a major 2020s resurgence and NXT crossover partnership.' },
-      stardom: { id:'stardom', name:'STARDOM', full:'World Wonder Ring Stardom', yr:2010, st:'ACTIVE', reg:'JAPAN', em:'✨', col:'#EC4899', ev:'Grand Queendom', gate:'5,539 (Yokohama)', aces:'Iwatani, Io Shirai, Giulia, Maika, Kamitani', bio:'The premier modern Joshi promotion under Bushiroad, setting modern women’s gate records across Japan.' },
-      noah: { id:'noah', name:'NOAH', full:'Pro Wrestling NOAH', yr:2000, st:'ACTIVE', reg:'JAPAN', em:'🚢', col:'#14B8A6', ev:'Destiny / New Year', gate:'44,000 (Dome 05)', aces:'Misawa, Kobashi, KENTA, Marufuji, Kiyomiya', bio:'Founded by Mitsuharu Misawa in 2000, dominating early-2000s Japanese box office with legendary GHC title bouts.' },
-      ecw: { id:'ecw', name:'ECW', full:'Extreme Championship Wrestling', yr:1992, st:'ACQUIRED', reg:'USA', em:'🪑', col:'#8B5CF6', ev:'Barely Legal', gate:'6,000 (Anarchy Rulz)', aces:'RVD, Taz, Sabu, Sandman, Tommy Dreamer', bio:'Paul Heyman’s Philadelphia hardcore counter-culture movement that reshaped modern American wrestling attitude.' },
-      roh: { id:'roh', name:'ROH', full:'Ring of Honor', yr:2002, st:'ACTIVE', reg:'USA', em:'🛡️', col:'#991B1B', ev:'Supercard of Honor', gate:'16,534 (MSG 2019)', aces:'Danielson, Punk, Joe, Briscoes, Bandido', bio:'The ultimate 21st-century independent incubator that forged the future main eventers of WWE and AEW.' },
-      nwa_jcp: { id:'nwa_jcp', name:'NWA / JCP', full:'National Wrestling Alliance', yr:1948, st:'ACTIVE', reg:'USA', em:'🌐', col:'#84CC16', ev:'Starrcade', gate:'26,500 (Starrcade 86)', aces:'Harley Race, Ric Flair, Dusty Rhodes', bio:'The historic territorial alliance that governed North American wrestling before the national cable boom.' },
-      awa: { id:'awa', name:'AWA', full:'American Wrestling Association', yr:1960, st:'DEFUNCT', reg:'USA', em:'🦅', col:'#A855F7', ev:'SuperClash', gate:'20,300 (Comiskey 86)', aces:'Verne Gagne, Bockwinkel, Hogan, Hennig', bio:'The dominant Midwest territory that birthed Hulkamania before the 1980s national cable expansion.' }
-    };
-
-    const TIMELINE = {
-      1980: { era:'Territory Era', span:'1980–1984', val:'$65M', med:'Regional Syndication', ace:'Antonio Inoki / Harley Race', gate:36295, ev:'Showdown at Shea', desc:'NWA cartel controls regional borders while WWF rules the Northeast and NJPW/AJPW pack Japanese arenas.', ms:'Bruno Sammartino battles Larry Zbyszko inside a steel cage before 36,295 at Shea Stadium.', geo:[55,30,15], rank:[['nwa_jcp',88,25,22000,'Harley Race'],['njpw',85,22,30000,'Antonio Inoki'],['wwe',80,18,36295,'Bruno Sammartino'],['ajpw',76,16,18000,'Giant Baba'],['cmll',70,10,16500,'El Santo'],['awa',68,9,15000,'Nick Bockwinkel']] },
-      1983: { era:'Dawn of Starrcade', span:'1980–1984', val:'$90M', med:'Closed-Circuit CCTV', ace:'Ric Flair / Hulk Hogan', gate:25000, ev:'Starrcade ’83', desc:'Jim Crockett stages Starrcade ’83 while Vince McMahon Jr. initiates national cable syndication.', ms:'Ric Flair defeats Harley Race at Starrcade ’83, proving the lucrative supercard revenue model.', geo:[60,28,12], rank:[['nwa_jcp',92,32,25000,'Ric Flair'],['wwe',86,28,26000,'Hulk Hogan'],['njpw',84,24,28000,'Antonio Inoki'],['ajpw',78,18,16000,'Stan Hansen'],['awa',72,12,18000,'Nick Bockwinkel'],['cmll',68,9,17000,'Perro Aguayo']] },
-      1987: { era:'Golden Boom', span:'1985–1991', val:'$180M', med:'PPV & NBC Main Event', ace:'Hulk Hogan / Macho Man', gate:78000, ev:'WrestleMania III', desc:'WrestleMania III shatters indoor stadium records with Hogan vs Andre; JCP counters with Great American Bash.', ms:'Hulk Hogan slams Andre the Giant at the Pontiac Silverdome while 33M watch on NBC SNME.', geo:[68,22,10], rank:[['wwe',98,95,78000,'Hulk Hogan'],['nwa_jcp',86,40,25000,'Ric Flair'],['njpw',82,30,35000,'Antonio Inoki'],['ajpw',79,26,20000,'Jumbo Tsuruta'],['cmll',65,11,18000,'Atlantis'],['awa',50,6,8000,'Curt Hennig']] },
-      1993: { era:'Dome & Lucha Boom', span:'1992–1995', val:'$220M', med:'Cable & Dome Supershows', ace:'Misawa / Hashimoto / Konnan', gate:63500, ev:'NJPW Jan 4 Tokyo Dome', desc:'Japanese promotions pack the Tokyo Dome & Budokan while AAA draws 48,000 in Mexico City for TripleManía I.', ms:'AAA stages TripleManía I before 48,000 fans at Plaza de Toros, igniting the 90s Lucha boom.', geo:[45,38,17], rank:[['njpw',92,55,63500,'Shinya Hashimoto'],['ajpw',90,48,58000,'Mitsuharu Misawa'],['wwe',82,72,29045,'Bret Hart'],['aaa',80,25,48000,'Konnan / Mysterio'],['wcw',75,45,12000,'Sting / Vader'],['cmll',71,18,18000,'Atlantis']] },
-      1998: { era:'Monday Night Wars', span:'1996–2001', val:'$650M', med:'Prime Time Cable & PPV', ace:'Steve Austin / Goldberg', gate:41412, ev:'WCW Nitro Georgia Dome', desc:'Austin 3:16 and The Rock battle WCW’s nWo and Goldberg as over 10M Americans watch Monday night cable weekly.', ms:'Goldberg defeats Hollywood Hogan before 41,412 on Nitro while Austin propels WWF to record profits.', geo:[75,18,7], rank:[['wwe',99,250,30000,'Steve Austin'],['wcw',96,220,41412,'Goldberg / Hogan'],['njpw',84,65,65000,'Keiji Muto'],['ajpw',82,52,58300,'Kenta Kobashi'],['ecw',68,14,6000,'Rob Van Dam'],['aaa',65,12,20000,'Perro Aguayo']] },
-      2005: { era:'Ruthless Aggression', span:'2002–2009', val:'$480M', med:'Cable, PPV & DVD', ace:'John Cena / Batista / Kobashi', gate:44000, ev:'NOAH Tokyo Dome Destiny', desc:'WWE crowns John Cena & Batista at WM21; Pro Wrestling NOAH fills the Tokyo Dome; TNA lands on Spike TV.', ms:'NOAH Destiny draws 44,000 to the Tokyo Dome for Misawa vs Kawada as Cena takes the WWE torch.', geo:[65,25,10], rank:[['wwe',98,371,20193,'John Cena'],['noah',80,28,44000,'Kenta Kobashi'],['njpw',74,24,35000,'Shinsuke Nakamura'],['tna',72,20,4000,'AJ Styles'],['cmll',70,14,18000,'Místico'],['roh',60,5,2500,'Bryan Danielson']] },
-      2014: { era:'OTT Network Dawn', span:'2010–2017', val:'$850M', med:'WWE Network & NJPW World', ace:'Daniel Bryan / Cena / Okada', gate:75167, ev:'WrestleMania XXX', desc:'WWE pioneers direct-to-consumer streaming with the WWE Network while NJPW’s Okada-Tanahashi rivalry peaks.', ms:'Daniel Bryan triumphs at WrestleMania XXX in New Orleans as WWE launches its OTT streaming platform.', geo:[70,20,10], rank:[['wwe',99,542,75167,'John Cena / Bryan'],['njpw',85,35,35000,'Kazuchika Okada'],['cmll',70,16,17500,'Atlantis'],['aaa',69,15,22000,'Psycho Clown'],['roh',64,9,3000,'Adam Cole'],['tna',62,14,3500,'Bobby Roode']] },
-      2023: { era:'Stadium Renaissance', span:'2018–2024', val:'$2.4B', med:'Cable, Peacock & Stadiums', ace:'Roman Reigns / Rhodes / Ospreay', gate:81035, ev:'AEW All In Wembley', desc:'AEW packs Wembley Stadium with 81,035 distributed tickets while WWE merges with UFC to form TKO Group.', ms:'AEW All In London sets the paid Wembley turnstile record; TKO Group forms at a $21B valuation.', geo:[76,14,10], rank:[['wwe',99,1330,80497,'Roman Reigns'],['aew',88,175,81035,'MJF / Omega'],['njpw',78,40,26085,'Kazuchika Okada'],['cmll',74,18,18000,'Místico'],['stardom',70,15,5539,'Giulia'],['aaa',68,14,18500,'Hijo del Vikingo']] },
-      2026: { era:'Global Streaming Era', span:'2025–2026+', val:'$3.2B', med:'Netflix Live, Max & PLEs', ace:'Roman Reigns / Sami Zayn / Will Ospreay', gate:72000, ev:'WrestleMania 42 / All In', desc:'WWE RAW streams live globally on Netflix ($5B deal); AEW simulcasts on WBD Max; cross-promotional alliances thrive.', ms:'Netflix unifies global live wrestling broadcasts across 190+ nations while AEW & WWE pack world stadiums.', geo:[78,12,10], rank:[['wwe',100,1650,72000,'Reigns / Zayn'],['aew',89,210,55000,'Will Ospreay'],['njpw',79,42,28000,'Zack Sabre Jr.'],['cmll',76,22,18000,'Místico'],['stardom',72,18,6000,'Maika'],['tna',68,18,5000,'Leon Slater']] }
-    };
-    const YEAR_KEYS = Object.keys(TIMELINE).map(Number);
-
-    const WARS = [
-      { yrs:'1983–1988', title:'Territory Consolidation: WWF vs NWA & AWA', out:'WWF National Cable Hegemony', pts:['Vince McMahon Jr. bought regional TV slots nationwide, signing Hogan, Piper, and Savage.', 'Jim Crockett countered with Starrcade CCTV before selling to Ted Turner (WCW) in 1988.'] },
-      { yrs:'1995–2001', title:'The Monday Night Wars: RAW vs Nitro', out:'WWF Acquires WCW & ECW', pts:['WCW Nitro & the nWo defeated WWF RAW for 83 straight weeks on TNT.', 'Austin, Rock, and Mr. McMahon ignited the Attitude Era, peaking at an 8.1 cable rating.'] },
-      { yrs:'1990–2000', title:'Puroresu Golden Age: NJPW vs AJPW', out:'50,000+ Tokyo Dome Sellout Era', pts:['NJPW drew 60,000+ to the Tokyo Dome with Hashimoto, Muto, and Chono.', 'AJPW’s Four Pillars (Misawa, Kobashi, Kawada, Taue) set the all-time in-ring standard.'] },
-      { yrs:'2019–2026', title:'The Streaming Boom: WWE (TKO) vs AEW', out:'Multi-Billion Dollar Global Rights', pts:['AEW launched on WBD networks and packed Wembley Stadium with over 81,000 fans.', 'WWE merged into TKO and signed a $5B Netflix deal while partnering with TNA & AAA.'] }
-    ];
-
-    // 2. GLOBAL VIEWING DIRECTORY DATA (CONVERTED DYNAMICALLY VIA INTL API)
-    const SHOWS = [
-      { show:'WWE Monday Night RAW', promo:'WWE', col:'#EF4444', day:1, hr:20, min:0, tz:'America/New_York', dur:'3 hrs', net:{ US:'Netflix Live', AU:'Netflix Live', GB:'Netflix Live', CA:'Netflix Live', JP:'ABEMA', MX:'Netflix Live', INT:'Netflix Global' } },
-      { show:'WWE NXT', promo:'WWE', col:'#F59E0B', day:2, hr:20, min:0, tz:'America/New_York', dur:'2 hrs', net:{ US:'The CW Network', AU:'Netflix Live', GB:'Netflix Live', CA:'Netflix Live', JP:'ABEMA', MX:'Netflix Live', INT:'Netflix Global' } },
-      { show:'AEW Dynamite', promo:'AEW', col:'#F59E0B', day:3, hr:20, min:0, tz:'America/New_York', dur:'2 hrs', net:{ US:'TBS & Max Live', AU:'ESPN / Kayo / Triller', GB:'ITV4 & TrillerTV', CA:'TSN+', JP:'NJPW World', MX:'Fox Sports MX', INT:'TrillerTV (AEW+)' } },
-      { show:'TNA iMPACT!', promo:'TNA', col:'#10B981', day:4, hr:20, min:0, tz:'America/New_York', dur:'2 hrs', net:{ US:'AXS TV & TNA+', AU:'TNA+ App', GB:'TNA+ App', CA:'Sportsnet 360', JP:'TNA+ App', MX:'MVStv', INT:'TNA+ Global' } },
-      { show:'WWE Friday Night SmackDown', promo:'WWE', col:'#3B82F6', day:5, hr:20, min:0, tz:'America/New_York', dur:'3 hrs', net:{ US:'USA Network', AU:'Netflix Live', GB:'Netflix Live', CA:'Netflix Live', JP:'ABEMA', MX:'Netflix Live', INT:'Netflix Global' } },
-      { show:'CMLL Viernes Espectacular', promo:'CMLL', col:'#06B6D4', day:5, hr:20, min:30, tz:'America/Mexico_City', dur:'2.5 hrs', net:{ US:'CMLL YouTube', AU:'CMLL YouTube', GB:'CMLL YouTube', CA:'CMLL YouTube', JP:'Samurai TV', MX:'TUDN / Ticketmaster', INT:'YouTube Membership' } },
-      { show:'AEW Collision', promo:'AEW', col:'#F59E0B', day:6, hr:20, min:0, tz:'America/New_York', dur:'2 hrs', net:{ US:'TNT & Max Live', AU:'ESPN / Kayo / Triller', GB:'ITV4 & TrillerTV', CA:'TSN+', JP:'NJPW World', MX:'Fox Sports MX', INT:'TrillerTV (AEW+)' } },
-      { show:'NJPW World Strong / Touring', promo:'NJPW', col:'#DC2626', day:6, hr:18, min:0, tz:'Asia/Tokyo', dur:'3 hrs', net:{ US:'NJPW World', AU:'NJPW World', GB:'NJPW World', CA:'NJPW World', JP:'TV Asahi / NJPW World', MX:'NJPW World', INT:'NJPW World OTT' } }
-    ];
-
-    // 3. OCTOBER 2026 VERIFIED CHAMPIONS DATA (WITH LIVE WIKIPEDIA API REVISION VERIFICATION)
-    const CHAMPS = [
-      { promo:'WWE', brand:'SmackDown', title:'Undisputed WWE Champion', holder:'Sami Zayn', won:'Sep 11, 2026 (Mexico City)', notes:'Defeated CM Punk on SmackDown', col:'#3B82F6' },
-      { promo:'WWE', brand:'RAW', title:'World Heavyweight Champion', holder:'Roman Reigns', won:'Apr 19, 2026 (WrestleMania 42)', notes:'Defeated CM Punk at WM 42 Night 2', col:'#EF4444' },
-      { promo:'WWE', brand:'RAW', title:'Women’s World Champion', holder:'Liv Morgan', won:'Oct 10, 2026 (New Orleans)', notes:'Won Triple Threat vs Lynch & Vaquer', col:'#EF4444' },
-      { promo:'WWE', brand:'SmackDown', title:'WWE Women’s Champion', holder:'Chelsea Green', won:'Aug 2, 2026 (SummerSlam)', notes:'5-Way Ladder Match Winner', col:'#3B82F6' },
-      { promo:'WWE', brand:'RAW', title:'Intercontinental Champion', holder:'Chad Gable', won:'Aug 2, 2026 (SummerSlam)', notes:'Defeated Penta at SummerSlam', col:'#EF4444' },
-      { promo:'WWE', brand:'SmackDown', title:'United States Champion', holder:'Trick Williams', won:'Sep 6, 2026 (Atlanta)', notes:'Defeated Baron Corbin at SNME', col:'#3B82F6' },
-      { promo:'WWE', brand:'RAW', title:'World Tag Team Champions', holder:'The Vision (Bron Breakker & Austin Theory)', won:'Jul 6, 2026 (RAW)', notes:'Defeated The Street Profits', col:'#EF4444' },
-      { promo:'WWE', brand:'SmackDown', title:'WWE Tag Team Champions', holder:'The MFTs (Tama Tonga & Talla Tonga)', won:'Aug 14, 2026 (SmackDown)', notes:'Triple Threat Tag Victory', col:'#3B82F6' },
-      { promo:'WWE', brand:'NXT', title:'NXT Champion', holder:'Grayson Waller', won:'Aug 30, 2026 (NXT Heatwave)', notes:'Won Fatal 4-Way vs Tony D’Angelo', col:'#F59E0B' },
-      { promo:'WWE', brand:'NXT', title:'NXT Women’s Champion', holder:'Kelani Jordan', won:'Aug 30, 2026 (NXT Heatwave)', notes:'Defeated Kendal Grey', col:'#F59E0B' },
-      { promo:'AEW', brand:'AEW', title:'AEW World Champion', holder:'Will Ospreay', won:'Aug 30, 2026 (All In London)', notes:'Defeated Kenny Omega; Retained at WrestleDream', col:'#F59E0B' },
-      { promo:'AEW', brand:'AEW', title:'AEW Women’s World Champion', holder:'Mercedes Moné', won:'Aug 30, 2026 (All In London)', notes:'Defeated Willow Nightingale; Beat Thekla Oct 17', col:'#F59E0B' },
-      { promo:'AEW', brand:'AEW', title:'AEW International Champion', holder:'Kazuchika Okada', won:'Aug 30, 2026 (All In London)', notes:'Won 3-Way vs Fletcher & Takeshita', col:'#F59E0B' },
-      { promo:'AEW', brand:'AEW', title:'AEW Continental Champion', holder:'Jon Moxley', won:'Dec 27, 2025 (Worlds End)', notes:'Retained vs Mark Davis at WrestleDream', col:'#F59E0B' },
-      { promo:'AEW', brand:'AEW', title:'AEW TNT Champion', holder:'Darby Allin', won:'Aug 30, 2026 (All In London)', notes:'Falls Count Anywhere vs Kevin Knight', col:'#F59E0B' },
-      { promo:'AEW', brand:'AEW', title:'AEW TBS Champion', holder:'Persephone', won:'Aug 30, 2026 (All In London)', notes:'Defeated Maya World', col:'#F59E0B' },
-      { promo:'AEW', brand:'AEW', title:'AEW World Tag Team Champions', holder:'The Young Bucks (Matt & Nick Jackson)', won:'Sep 26, 2026 (All Out)', notes:'Won 3-Way Ladder Match vs Cage/Cope & FTR', col:'#F59E0B' },
-      { promo:'AEW', brand:'AEW', title:'AEW World Trios Champions', holder:'Hangman Page, Brody King & Bandido', won:'Oct 17, 2026 (WrestleDream)', notes:'2-out-of-3 Falls vs Swerve & New Level', col:'#F59E0B' },
-      { promo:'NJPW', brand:'TNA', title:'TNA World Champion', holder:'Leon Slater', won:'2026 Reign', notes:'Youngest TNA World Titleholder', col:'#10B981' },
-      { promo:'NJPW', brand:'ROH', title:'ROH World Champion', holder:'Bandido', won:'2026 Reign', notes:'Dual ROH World & AEW Trios Champion', col:'#DC2626' },
-      { promo:'NJPW', brand:'ROH', title:'ROH Women’s World Champion', holder:'Athena', won:'Forever Champion Streak', notes:'Historic Multi-Year Dominant Reign', col:'#DC2626' }
-    ];
-
-    // 4. STATE & CORE ROUTING
-    let currYear = 2026, playTimer = null, mainChart = null, radarChart = null, allRevealed = false;
-    const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone || 'America/New_York';
-
-    function setService(srv) {
-      ['history','directory','champions','moments','guides'].forEach(s => {
-        document.getElementById(`srv-${s}`).classList.toggle('hidden', s !== srv);
-      });
-      document.querySelectorAll('.srv-btn').forEach(b => {
-        const active = b.dataset.srv === srv;
-        b.className = `srv-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 whitespace-nowrap ${active ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'}`;
-      });
-      if (srv === 'moments' || srv === 'guides') renderComingSoon(srv);
-      lucide.createIcons();
-    }
-
-    function setSubTab(sub) {
-      ['timeline','analytics','versus','encyclopedia','wars'].forEach(s => {
-        document.getElementById(`sub-${s}`).classList.toggle('hidden', s !== sub);
-      });
-      document.querySelectorAll('.sub-btn').forEach(b => {
-        const active = b.dataset.sub === sub;
-        b.className = `sub-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold transition ${active ? 'bg-amber-400 text-black' : 'text-zinc-400 hover:text-white'}`;
-      });
-      if (sub === 'analytics') setTimeout(() => mainChart?.resize(), 50);
-      if (sub === 'versus') renderVersus();
-    }
-
-    // 5. TIMELINE ENGINE
-    function renderTimeline(yr) {
-      currYear = Number(yr);
-      const d = TIMELINE[currYear], idx = YEAR_KEYS.indexOf(currYear);
-      document.getElementById('tl-slider').value = idx;
-      document.getElementById('tl-year').textContent = currYear;
-      document.getElementById('tl-era').textContent = d.era;
-      document.getElementById('tl-span').textContent = d.span;
-      document.getElementById('tl-val').textContent = `${d.val} INDUSTRY`;
-      document.getElementById('tl-desc').textContent = d.desc;
-      document.getElementById('tl-milestone').textContent = d.ms;
-
-      document.getElementById('tl-quad').innerHTML = [
-        ['Top Attraction', d.ace, 'text-amber-400'],
-        ['Peak Single Gate', `${d.gate.toLocaleString()} fans`, 'text-emerald-400'],
-        ['Flagship Card', d.ev, 'text-white'],
-        ['Primary Medium', d.med, 'text-cyan-400']
-      ].map(([k,v,c]) => `<div class="bg-obsidian/60 p-3.5 rounded-xl border border-white/[0.05]"><span class="text-[10px] font-mono uppercase text-zinc-500 block">${k}</span><strong class="text-xs sm:text-sm ${c} truncate block mt-0.5">${v}</strong></div>`).join('');
-
-      document.getElementById('tl-leaderboard').innerHTML = d.rank.map(([id,sc,rev,att,star], i) => {
-        const p = PROMOS[id];
-        return `<div class="p-3 rounded-xl bg-obsidian/50 border border-white/[0.05] hover:border-white/15 transition">
-          <div class="flex items-center justify-between text-xs mb-1.5">
-            <div class="flex items-center gap-2"><span class="w-5 h-5 rounded font-mono text-[10px] font-bold flex items-center justify-center ${i===0?'bg-amber-400 text-black':'bg-zinc-800 text-zinc-400'}">${i+1}</span><span>${p.em}</span><strong class="text-white">${p.name}</strong><span class="text-zinc-500 hidden sm:inline">• ${star}</span></div>
-            <div class="font-mono text-[11px] flex items-center gap-3"><span class="text-zinc-400">$${rev}M</span><span class="text-emerald-400 hidden sm:inline">${att.toLocaleString()} gate</span><strong class="text-amber-400 bg-white/5 px-2 py-0.5 rounded">${sc}</strong></div>
-          </div>
-          <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden"><div class="h-full rounded-full transition-all duration-500" style="width:${sc}%;background:${p.col}"></div></div>
-        </div>`;
-      }).join('');
-
-      const geos = [['North America', d.geo[0], 'bg-rose-500'], ['Japan (Puroresu)', d.geo[1], 'bg-indigo-500'], ['Mexico (Lucha)', d.geo[2], 'bg-cyan-400']];
-      document.getElementById('tl-geo').innerHTML = geos.map(([lbl,pct,cls]) => `<div><div class="flex justify-between text-xs mb-1"><span class="text-zinc-300">${lbl}</span><span class="font-mono font-bold text-zinc-400">${pct}%</span></div><div class="h-2 bg-obsidian rounded-full overflow-hidden"><div class="h-full ${cls} transition-all duration-500" style="width:${pct}%"></div></div></div>`).join('');
-    }
-
-    function stepYear(dir) {
-      let next = YEAR_KEYS.indexOf(currYear) + dir;
-      if (next >= 0 && next < YEAR_KEYS.length) renderTimeline(YEAR_KEYS[next]);
-    }
-
-    function togglePlay() {
-      const lbl = document.getElementById('play-lbl');
-      if (playTimer) { clearInterval(playTimer); playTimer = null; lbl.textContent = 'AUTOPLAY ERAS'; return; }
-      lbl.textContent = 'PAUSE';
-      playTimer = setInterval(() => {
-        let next = (YEAR_KEYS.indexOf(currYear) + 1) % YEAR_KEYS.length;
-        renderTimeline(YEAR_KEYS[next]);
-      }, 1500);
-    }
-
-    // 6. CHARTS & H2H SIMULATOR
-    function initCharts() {
-      const keys = ['wwe','wcw','aew','njpw','ajpw','cmll','aaa','tna'];
-      mainChart = new Chart(document.getElementById('mainChart'), {
-        type: 'line',
-        data: {
-          labels: YEAR_KEYS,
-          datasets: keys.map(k => ({
-            label: PROMOS[k].name, borderColor: PROMOS[k].col, backgroundColor: PROMOS[k].col,
-            borderWidth: 2, tension: 0.3, pointRadius: 3,
-            data: YEAR_KEYS.map(y => { const r = TIMELINE[y].rank.find(x => x[0]===k); return r ? r[1] : null; })
-          }))
-        },
-        options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ labels:{ color:'#a1a1aa', boxWidth:10 } } }, scales:{ x:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#71717a' } }, y:{ grid:{ color:'rgba(255,255,255,0.04)' }, ticks:{ color:'#71717a' } } } }
-      });
-
-      radarChart = new Chart(document.getElementById('radarChart'), {
-        type: 'radar',
-        data: { labels: ['Power', 'Revenue', 'Peak Gate', 'Reach', 'Roster'], datasets: [{ label:'A', data:[0,0,0,0,0] }, { label:'B', data:[0,0,0,0,0] }] },
-        options: { responsive:true, maintainAspectRatio:false, scales:{ r:{ grid:{ color:'rgba(255,255,255,0.08)' }, angleLines:{ color:'rgba(255,255,255,0.08)' }, pointLabels:{ color:'#a1a1aa', font:{ size:10 } }, ticks:{ display:false, min:0, max:100 } } }, plugins:{ legend:{ labels:{ color:'#e4e4e7' } } } }
-      });
-    }
-
-    function setChartMetric(type, label, max) {
-      const idxMap = { score:1, rev:2, att:3 };
-      mainChart.data.datasets.forEach(ds => {
-        const k = Object.keys(PROMOS).find(key => PROMOS[key].name === ds.label);
-        ds.data = YEAR_KEYS.map(y => { const r = TIMELINE[y].rank.find(x => x[0]===k); return r ? r[idxMap[type]] : null; });
-      });
-      mainChart.options.scales.y.max = max;
-      mainChart.update();
-    }
-
-    function renderVersus() {
-      const idA = document.getElementById('vs-a').value, idB = document.getElementById('vs-b').value, yr = document.getElementById('vs-yr').value;
-      const pA = PROMOS[idA], pB = PROMOS[idB], snap = TIMELINE[yr];
-      const rA = snap.rank.find(x => x[0]===idA) || [idA,0,0,0,'Inactive'], rB = snap.rank.find(x => x[0]===idB) || [idB,0,0,0,'Inactive'];
-      const cardHtml = (p, r) => `<div class="flex justify-between items-center border-b border-white/10 pb-3 mb-3"><h4 class="font-display font-bold text-lg text-white">${p.em} ${p.name}</h4><span class="font-mono text-xs px-2 py-0.5 rounded bg-white/5 text-amber-400">${r[1]}/100</span></div>
-        <div class="space-y-2 text-xs"><div class="flex justify-between"><span class="text-zinc-500">Gross Scale:</span><strong class="font-mono">$${r[2]}M</strong></div><div class="flex justify-between"><span class="text-zinc-500">Peak Gate:</span><strong class="font-mono text-emerald-400">${r[3].toLocaleString()}</strong></div><div class="flex justify-between"><span class="text-zinc-500">Top Star:</span><strong class="text-amber-400">${r[4]}</strong></div><p class="text-zinc-400 pt-2 text-[11px] leading-relaxed">${p.bio}</p></div>`;
-      document.getElementById('vs-card-a').innerHTML = cardHtml(pA, rA);
-      document.getElementById('vs-card-b').innerHTML = cardHtml(pB, rB);
-      if (radarChart) {
-        const calc = r => [r[1], Math.min(100, r[2]/2), Math.min(100, r[3]/800), r[1]*0.95, r[1]*0.9];
-        radarChart.data.datasets[0] = { label:pA.name, data:calc(rA), borderColor:pA.col, backgroundColor:pA.col+'33', borderWidth:2 };
-        radarChart.data.datasets[1] = { label:pB.name, data:calc(rB), borderColor:pB.col, backgroundColor:pB.col+'33', borderWidth:2 };
-        radarChart.update();
-      }
-    }
-
-    // 7. ENCYCLOPEDIA & WARS
-    function renderEncyclopedia() {
-      const q = document.getElementById('enc-search').value.toLowerCase(), reg = document.getElementById('enc-reg').value;
-      document.getElementById('enc-grid').innerHTML = Object.values(PROMOS).filter(p => (reg==='ALL'||p.reg===reg) && (p.name.toLowerCase().includes(q)||p.aces.toLowerCase().includes(q)||p.full.toLowerCase().includes(q))).map(p => `
-        <div class="card p-5 flex flex-col justify-between border-t-2" style="border-top-color:${p.col}">
-          <div class="space-y-2.5">
-            <div class="flex justify-between items-center text-[10px] font-mono text-zinc-400"><span>${p.st} • EST. ${p.yr}</span><span class="px-2 py-0.5 bg-white/5 rounded">${p.reg}</span></div>
-            <h3 class="font-display font-bold text-lg text-white">${p.em} ${p.name} <span class="text-xs font-normal text-zinc-500 block">${p.full}</span></h3>
-            <p class="text-xs text-zinc-400 leading-relaxed">${p.bio}</p>
-          </div>
-          <div class="pt-3 mt-3 border-t border-white/[0.06] text-[11px] space-y-1">
-            <div class="flex justify-between"><span class="text-zinc-500">Record Gate:</span><span class="font-mono text-emerald-400">${p.gate}</span></div>
-            <div class="flex justify-between"><span class="text-zinc-500">Flagship:</span><span class="text-amber-400">${p.ev}</span></div>
-            <div class="text-zinc-500 pt-1">Aces: <span class="text-zinc-300">${p.aces}</span></div>
-          </div>
-        </div>`).join('');
-    }
-
-    // 8. GLOBAL VIEWING DIRECTORY (KEYLESS TIMEZONE & IPAPI GEOLOCATION)
-    function renderDirectory(countryCode) {
-      document.getElementById('dir-tz-label').textContent = `${userTZ.replace('_',' ')}`;
-      const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-      document.getElementById('dir-grid').innerHTML = SHOWS.map(s => {
-        // Compute local time conversion from show base timezone
-        const ref = new Date();
-        const diff = (s.day - ref.getUTCDay() + 7) % 7;
-        ref.setUTCDate(ref.getUTCDate() + diff);
-        ref.setUTCHours(s.tz === 'Asia/Tokyo' ? s.hr - 9 : s.tz === 'America/Mexico_City' ? s.hr + 6 : s.hr + 4, s.min, 0);
-        const localStr = new Intl.DateTimeFormat('en-US', { weekday:'short', hour:'numeric', minute:'2-digit', timeZone: userTZ }).format(ref);
-        const platform = s.net[countryCode] || s.net.INT;
-        return `<div class="card p-5 space-y-3 border-l-4" style="border-left-color:${s.col}">
-          <div class="flex justify-between items-start">
-            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-white/5 text-zinc-300">${s.promo} • ${s.dur}</span>
-            <span class="text-xs font-mono font-bold text-amber-400 bg-amber-400/10 px-2.5 py-0.5 rounded-lg border border-amber-400/20">${localStr}</span>
-          </div>
-          <h3 class="font-display font-bold text-base text-white">${s.show}</h3>
-          <div class="pt-2 border-t border-white/[0.06] flex items-center justify-between text-xs">
-            <span class="text-zinc-500">Official Broadcaster:</span>
-            <strong class="text-emerald-400 flex items-center gap-1"><i data-lucide="tv-2" class="w-3.5 h-3.5"></i> ${platform}</strong>
-          </div>
-        </div>`;
-      }).join('');
-      lucide.createIcons();
-    }
-
-    // 9. ACTIVE CHAMPIONS TRACKER (SPOILER GUARD + KEYLESS WIKIPEDIA API SYNC)
-    function renderChampions() {
-      const flt = document.getElementById('champ-filter').value;
-      const list = CHAMPS.filter(c => flt === 'ALL' || c.promo === flt);
-      document.getElementById('champ-grid').innerHTML = list.map((c, i) => `
-        <div onclick="this.classList.toggle('spoiler-revealed')" class="card p-5 cursor-pointer select-none group ${allRevealed ? 'spoiler-revealed' : ''}">
-          <div class="flex justify-between items-center text-[10px] font-mono mb-2">
-            <span class="px-2 py-0.5 rounded bg-white/5 font-bold" style="color:${c.col}">${c.brand}</span>
-            <span class="text-zinc-500 group-hover:text-amber-400 transition flex items-center gap-1"><i data-lucide="eye" class="w-3 h-3"></i> Click to toggle</span>
-          </div>
-          <h3 class="font-display font-bold text-sm text-zinc-300">${c.title}</h3>
-          <div class="spoiler-blur mt-3 pt-3 border-t border-white/[0.06] space-y-1">
-            <div class="font-display font-extrabold text-lg text-white">${c.holder}</div>
-            <div class="text-[11px] font-mono text-amber-400">Won: ${c.won}</div>
-            <div class="text-[11px] text-zinc-400">${c.notes}</div>
-          </div>
-        </div>`).join('');
-      lucide.createIcons();
-    }
-
-    function toggleAllSpoilers() {
-      allRevealed = !allRevealed;
-      document.getElementById('spoiler-master-btn').innerHTML = `<i data-lucide="${allRevealed?'eye-off':'eye'}" class="w-3.5 h-3.5"></i> <span>${allRevealed?'Hide All Spoilers':'Reveal All'}</span>`;
-      renderChampions();
-    }
-
-    // Keyless Wikipedia MediaWiki API Ping to verify live championship table timestamp
-    async function syncLiveWikiRevision() {
-      try {
-        const res = await fetch('https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles=List_of_current_champions_in_WWE|List_of_current_champions_in_All_Elite_Wrestling&rvprop=timestamp&format=json&origin=*');
-        const data = await res.json();
-        const pages = Object.values(data.query.pages);
-        const latest = new Date(pages[0].revisions[0].timestamp).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
-        document.getElementById('wiki-sync-badge').innerHTML = `<span class="text-emerald-400">● Live MediaWiki Sync: ${latest}</span>`;
-      } catch {
-        document.getElementById('wiki-sync-badge').textContent = '● Verified Archival Snapshot (Oct 2026)';
-      }
-    }
-
-    // 10. COMING SOON RENDERER (FOR EDITORIAL/MANUAL SERVICES)
-    function renderComingSoon(srv) {
-      const cfg = srv === 'moments'
-        ? { icon:'zap', title:'Top 5 Moments of the Week', sub:'Curated Weekly Highlights, Promo Segments & Match Climaxes', desc:'' }
-        : { icon:'book-open-check', title:'Spoiler-Free Match Guides', sub:'Storyline Stakes, Feud Histories & Card Rundowns Without Outcomes', desc:'' };
-      document.getElementById(`srv-${srv}`).innerHTML = `
-        <div class="card p-10 sm:p-16 text-center max-w-2xl mx-auto my-8 space-y-5 relative overflow-hidden">
-          <div class="w-14 h-14 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 mx-auto shadow-[0_0_30px_rgba(245,158,11,0.2)]">
-            <i data-lucide="${cfg.icon}" class="w-7 h-7"></i>
-          </div>
-          <span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-widest bg-amber-400 text-black">Coming Soon</span>
-          <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white">${cfg.title}</h2>
-          <p class="text-xs font-mono text-amber-400/90">${cfg.sub}</p>
-          <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">${cfg.desc}</p>
-          <div class="pt-4 flex justify-center gap-3">
-            <button onclick="setService('history')" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-semibold text-white transition">Explore History & Stats</button>
-            <button onclick="setService('champions')" class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-xs font-bold text-black transition">View Active Champions</button>
-          </div>
-        </div>`;
-    }
-
-    // INITIALIZATION
-    window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('tl-ticks').innerHTML = YEAR_KEYS.map((y,i) => `<span onclick="renderTimeline(${y})" class="cursor-pointer hover:text-amber-400 transition">${y}</span>`).join('');
-      const vsA = document.getElementById('vs-a'), vsB = document.getElementById('vs-b'), vsYr = document.getElementById('vs-yr');
-      Object.values(PROMOS).forEach(p => { vsA.add(new Option(`${p.em} ${p.name}`, p.id)); vsB.add(new Option(`${p.em} ${p.name}`, p.id)); });
-      vsA.value = 'wwe'; vsB.value = 'aew';
-      YEAR_KEYS.slice().reverse().forEach(y => vsYr.add(new Option(`Season ${y}`, y)));
-      document.getElementById('sub-wars').innerHTML = WARS.map(w => `<div class="card p-6 space-y-3"><div class="flex flex-wrap justify-between gap-2"><span class="text-xs font-mono text-amber-400 font-bold">${w.yrs}</span><span class="text-xs font-mono px-2.5 py-0.5 rounded bg-emerald-400/10 text-emerald-400">${w.out}</span></div><h3 class="font-display font-bold text-lg text-white">${w.title}</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">${w.pts.map(pt => `<div class="p-3.5 rounded-xl bg-obsidian/60 border border-white/5 text-xs text-zinc-300 leading-relaxed">${pt}</div>`).join('')}</div></div>`).join('');
-
-      renderTimeline(2026);
-      initCharts();
-      renderEncyclopedia();
-      renderDirectory('US');
-      renderChampions();
-      syncLiveWikiRevision();
-
-      // Auto-detect country via keyless ipapi.co endpoint
-      fetch('https://ipapi.co/json/').then(r => r.json()).then(d => {
-        if (d.country_code && ['US','AU','GB','CA','JP','MX'].includes(d.country_code)) {
-          document.getElementById('dir-country').value = d.country_code;
-          renderDirectory(d.country_code);
-        }
-      }).catch(() => {});
-
-      lucide.createIcons();
-    });
-  </script>
+champs();shows();hist();route();
+</script>
 </body>
 </html>
