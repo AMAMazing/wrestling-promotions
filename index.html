@@ -13,12 +13,13 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
 .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
 a{color:inherit;text-decoration:none}
-header{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 0;gap:10px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.01em}
 .logo i{width:12px;height:12px;border-radius:3px;background:var(--accent);transform:rotate(45deg)}
 .actions{display:flex;gap:8px}
 .pill,.icon,select{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;font:inherit;font-size:14px;cursor:pointer;transition:border-color .2s}
 .pill{padding:8px 14px;display:inline-flex;gap:6px;align-items:center}
+.pill.hot{border-color:var(--accent)}
 select{padding:8px 14px}
 .icon{width:38px;height:38px;display:grid;place-items:center}
 .pill:hover,.icon:hover,select:hover{border-color:var(--ink)}
@@ -51,9 +52,18 @@ a.card:hover .go span{background:var(--accent);color:var(--accent-ink);transform
 .chip{font-size:13px;padding:5px 11px;border-radius:999px;background:var(--chip)}
 .spoil{filter:blur(6px);transition:filter .3s;user-select:none}
 a.card:hover .spoil,.revealed .spoil{filter:none;user-select:auto}
-.rush{display:flex;gap:8px;margin-top:6px}
+.rush{display:flex;gap:8px;margin-top:6px;max-width:460px}
 .rush b{flex:1;height:44px;border-radius:10px 10px 4px 4px;background:var(--chip);border:1px dashed var(--line);display:grid;place-items:center;font-size:12px;color:var(--muted);font-weight:500}
 .rush b:last-child{border-color:var(--accent);color:var(--accent)}
+/* Mount Rushmore featured strip (sits above the grid) */
+.rushbar{display:flex;align-items:center;gap:20px;padding:22px 24px;margin-bottom:14px;background:var(--surface);border:1px solid var(--line);border-radius:20px;transition:transform .25s,border-color .25s,box-shadow .25s}
+.rushbar .rush{margin:0;max-width:none;flex:none;gap:8px}
+.rushbar .rush b{flex:none;width:44px;height:44px;border-radius:8px 8px 4px 4px;font-size:12px}
+.rushbar .txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;line-height:1.4}
+.rushbar strong{font-size:18px;font-weight:650;letter-spacing:-.015em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.rushbar .tag{font-size:12px;padding:3px 10px}
+.rushbar small{font-size:14px;color:var(--muted)}
+.rushbar .arr{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--chip);font-size:15px;font-weight:600;transition:.25s}
 .view{display:none;padding-bottom:48px}
 .view.on{display:block}
 .bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:8px 0 18px}
@@ -78,9 +88,17 @@ input.s{border:1px solid var(--line);background:var(--surface);color:var(--ink);
 .cmpbars{display:grid;gap:14px}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
 svg.ch{width:100%;height:auto;display:block}
+.back{display:inline-flex;margin-bottom:8px;font-size:14px;color:var(--muted)}
+.back:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:600;font-size:15px;border:0;font-family:inherit}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:22px}
+.fine{font-size:13px;color:var(--muted);margin:0;max-width:none}
+.card .ico{font-size:22px;line-height:1}
 @media(max-width:560px){.quad{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:860px){.card,.w7,.w5,.w6{grid-column:span 6}}
+@media(max-width:860px){.card,.w7,.w5,.w6{grid-column:span 6}.w12{grid-column:span 12}}
 @media(max-width:560px){.card,.w7,.w5,.w6{grid-column:span 12;min-height:0}.pill .lbl{display:none}.hero{padding:32px 0 24px}}
+@media(max-width:420px){.rushbar .rush{display:none}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -89,7 +107,8 @@ svg.ch{width:100%;height:auto;display:block}
 <header>
   <a class="logo" href="#home"><i></i>Wrestling Promotions</a>
   <div class="actions">
-    <a class="pill" href="#home">🧋 <span class="lbl">Buy me a boba</span></a>
+    <a class="pill hot" href="#myaew" aria-label="MyAEW Plus extension">⚡ <span class="lbl">MyAEW Extension</span></a>
+    <a class="pill" href="#home" aria-label="Buy me a boba">🧋 <span class="lbl">Buy me a boba</span></a>
     <button class="icon" id="theme" aria-label="Toggle light and dark mode">◐</button>
   </div>
 </header>
@@ -102,15 +121,40 @@ svg.ch{width:100%;height:auto;display:block}
     <h1>Every match. Every title. <em>Zero spoilers.</em></h1>
     <p class="sub">Guides, history and stats for pro wrestling fans. Pick a door.</p>
   </div>
+  <a class="rushbar" href="#rushmore" aria-label="Mount Rushmore: build yours">
+    <div class="rush" aria-hidden="true"><b>1</b><b>2</b><b>3</b><b>You?</b></div>
+    <div class="txt"><strong>Mount Rushmore <span class="tag">Soon</span></strong><small>What’s your Mount Rushmore? Carve yours into the mountain.</small></div>
+    <span class="arr" aria-hidden="true">→</span>
+  </a>
   <div class="grid">
     <a class="card feature w7" href="#guides"><span class="num">01</span><span class="tag">Soon</span><h2>Spoiler-Free Match Guides</h2><p>Know what’s at stake in every match before you press play. Never who wins.</p><div class="go">Get notified <span>→</span></div></a>
     <a class="card w5" href="#champions"><span class="num">02</span><h2>Active Champions</h2><p>Who holds the gold right now? Hover or tap to reveal.</p><div class="chips" aria-hidden="true"><span class="chip spoil">Champion Name</span><span class="chip spoil">Tag Champs</span><span class="chip spoil">Women’s Champ</span></div><div class="go">Open tracker <span>→</span></div></a>
     <a class="card" href="#watch"><span class="num">03</span><h2>Where to Watch</h2><p>Channels, streams and show times in your time zone.</p><div class="go">Find my channel <span>→</span></div></a>
-    <a class="card" href="#history"><span class="num">04</span><h2>History &amp; Stats</h2><p>Scrub through eras and see who ruled each one.</p><div class="go">Dig into the archive <span>→</span></div></a>
-        <a class="card" href="#rushmore"><span class="num">05</span><h2>Mount Rushmore</h2><p>Legends’ four greatest, then donate to carve your own.</p><div class="rush" aria-hidden="true"><b>1</b><b>2</b><b>3</b><b>You?</b></div><div class="go">Build yours <span>→</span></div></a>
+    <a class="card" href="#history"><span class="num">04</span><h2>Promotion Stats</h2><p>Scrub through eras and see who ruled each one.</p><div class="go">Dig into the archive <span>→</span></div></a>
+    <a class="card" href="#wrestlers"><span class="num">05</span><span class="tag">Soon</span><h2>Wrestlers Stats</h2><p>The numbers on the wrestlers themselves.</p><div class="go">Peek behind the curtain <span>→</span></div></a>
     <a class="card w6" href="#game"><span class="num">06</span><h2>Who Beat Who?</h2><p>Pick the winner, or call it a draw.</p><div class="go">Play a round <span>→</span></div></a>
     <a class="card w6" href="#blog"><span class="num">07</span><h2>The Yap Blog</h2><p>Hot takes and whatever’s on my mind.</p><div class="go">Read the latest <span>→</span></div></a>
   </div>
+</section>
+
+<!-- MYAEW EXTENSION -->
+<section class="view" id="v-myaew">
+  <a class="back" href="#home">← Back home</a>
+  <div class="hero" style="padding-top:20px">
+    <p class="eyebrow">Chrome extension · Coming soon</p>
+    <h1>MyAEW Plus, <em>cleaned up.</em></h1>
+    <p class="sub">MyAEW is great value for modern wrestling fans, but the site fights you. This extension fixes that. Desktop and Android.</p>
+    <div class="cta"><button class="btn" disabled>Chrome Web Store · soon</button><span class="fine">Not published yet. This page will be the download home.</span></div>
+  </div>
+  <div class="grid" style="padding-bottom:20px">
+    <div class="card w6"><span class="ico">🎨</span><h3>Cleaner UI</h3><p style="max-width:none">A tidier, easier-to-navigate layout for the MyAEW site.</p></div>
+    <div class="card w6"><span class="ico">⏩</span><h3>Speed controller</h3><p style="max-width:none">Watch at the pace you want, from catch-up mode to slow-mo.</p></div>
+    <div class="card w6"><span class="ico">🪟</span><h3>Picture-in-Picture</h3><p style="max-width:none">One click pops the video into a floating window so you can multitask.</p></div>
+    <div class="card w6"><span class="ico">⏭️</span><h3>Skips the filler screen</h3><p style="max-width:none">Jumps past the roughly 2 minute break screen that plays between segments.</p></div>
+    <div class="card w6"><span class="ico">💻</span><h3>Desktop</h3><p style="max-width:none">Install it in Chrome on Windows, macOS or Linux.</p></div>
+    <div class="card w6"><span class="ico">📱</span><h3>Works on Android too</h3><p style="max-width:none">Get it on Vivaldi mobile for Android and watch with the same tweaks on your phone.</p></div>
+  </div>
+  <p class="fine">Unofficial. Not affiliated with, endorsed by or sponsored by AEW or MyAEW.</p>
 </section>
 
 <!-- CHAMPIONS -->
@@ -128,9 +172,9 @@ svg.ch{width:100%;height:auto;display:block}
   <div class="grid" id="shows"></div>
 </section>
 
-<!-- HISTORY -->
+<!-- HISTORY / PROMOTION STATS -->
 <section class="view" id="v-history">
-  <div class="bar"><div><p class="meta">1980–2026 · 14 promotions</p><h1>History &amp; Stats</h1></div></div>
+  <div class="bar"><div><p class="meta">1980–2026 · 14 promotions</p><h1>Promotion Stats</h1></div></div>
   <div class="seg" id="hseg"></div>
 
   <div class="hp on" id="hp-timeline"><div class="grid">
@@ -162,25 +206,25 @@ svg.ch{width:100%;height:auto;display:block}
 </section>
 
 <!-- SOON -->
-<section class="view" id="v-soon"><div class="card soon"><span class="tag">Coming soon</span><h2 id="s-title"></h2><p id="s-desc"></p><div class="chips" style="justify-content:center"><a class="pill" href="#champions">View champions</a><a class="pill" href="#history">Explore history</a></div></div></section>
+<section class="view" id="v-soon"><div class="card soon"><span class="tag">Coming soon</span><h2 id="s-title"></h2><p id="s-desc"></p><div class="chips" id="s-feat" style="justify-content:center"></div><div class="chips" style="justify-content:center"><a class="pill" href="#champions">View champions</a><a class="pill" href="#history">Promotion stats</a></div></div></section>
 
 <footer><span>🧋 Community goal: help keep the archive growing.</span><span>Some links are affiliates or sponsors.</span></footer>
 </div>
 
 <script>
 var $=function(i){return document.getElementById(i)};
-var NAV=[['guides','Match Guides'],['champions','Champions'],['watch','Where to Watch'],['history','History & Stats'],['rushmore','Mount Rushmore'],['game','Who Beat Who'],['blog','Blog']];
-var SOON={guides:['Spoiler-Free Match Guides','Storylines, stakes and card rundowns, without the outcomes.'],rushmore:['Mount Rushmore','Legends’ four greatest, plus yours if you donate.'],game:['Who Beat Who?','Pick the winner or call a draw.'],blog:['The Yap Blog','Anything I want to yap about.']};
-var LIVE=['champions','watch','history'];
+var NAV=[['guides','Match Guides'],['champions','Champions'],['watch','Where to Watch'],['history','Promotion Stats'],['wrestlers','Wrestlers Stats'],['rushmore','Mount Rushmore'],['game','Who Beat Who'],['blog','Blog']];
+var SOON={guides:['Spoiler-Free Match Guides','Storylines, stakes and card rundowns, without the outcomes.'],wrestlers:['Wrestlers Stats','Stats on the wrestlers themselves, built from a big dataset that also powers Who Beat Who. Details soon.',['Powers Who Beat Who','Details soon']],rushmore:['Mount Rushmore','What’s your Mount Rushmore? Pick your four greatest, and donate to carve yours into the mountain.'],game:['Who Beat Who?','Pick the winner or call a draw.'],blog:['The Yap Blog','Anything I want to yap about.']};
+var LIVE=['champions','watch','history','myaew'];
 
 /* routing */
 function route(){
   var h=(location.hash||'#home').slice(1);
   var key=LIVE.indexOf(h)>-1||h==='home'?h:(SOON[h]?'soon':'home');
   document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('on',v.id==='v-'+key)});
-  if(key==='soon'){$('s-title').textContent=SOON[h][0];$('s-desc').textContent=SOON[h][1]}
-  $('tabs').hidden=h==='home'||key==='home'&&h!=='home';
-  $('tabs').hidden=(key==='home');
+  if(key==='soon'){$('s-title').textContent=SOON[h][0];$('s-desc').textContent=SOON[h][1];
+    $('s-feat').innerHTML=(SOON[h][2]||[]).map(function(f){return '<span class="chip">'+f+'</span>'}).join('')}
+  $('tabs').hidden=(key==='home'||key==='myaew');
   $('tabs').innerHTML=NAV.map(function(n){return '<a class="pill'+(n[0]===h?' on':'')+'" href="#'+n[0]+'">'+n[1].replace('&','&amp;')+'</a>'}).join('');
   window.scrollTo(0,0);
 }
